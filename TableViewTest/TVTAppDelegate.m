@@ -7,6 +7,7 @@
 //
 
 #import "TVTAppDelegate.h"
+#import "TVTListViewController.h"
 
 @implementation TVTAppDelegate
 
@@ -14,6 +15,12 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
+    
+    TVTListViewController *listViewController = [[TVTListViewController alloc] init];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:listViewController];
+    
+    [[self window] setRootViewController:navController];
+    
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     return YES;

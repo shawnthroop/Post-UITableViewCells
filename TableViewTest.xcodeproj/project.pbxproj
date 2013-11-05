@@ -19,6 +19,8 @@
 		B588967E17F0CDF50080426B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B588966617F0CDF50080426B /* UIKit.framework */; };
 		B588968617F0CDF50080426B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B588968417F0CDF50080426B /* InfoPlist.strings */; };
 		B588968817F0CDF50080426B /* TableViewTestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B588968717F0CDF50080426B /* TableViewTestTests.m */; };
+		B588969317F0CE3B0080426B /* TVTListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B588969217F0CE3B0080426B /* TVTListViewController.m */; };
+		B588969617F0D0880080426B /* TVTCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B588969517F0D0880080426B /* TVTCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +50,10 @@
 		B588968317F0CDF50080426B /* TableViewTestTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "TableViewTestTests-Info.plist"; sourceTree = "<group>"; };
 		B588968517F0CDF50080426B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B588968717F0CDF50080426B /* TableViewTestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TableViewTestTests.m; sourceTree = "<group>"; };
+		B588969117F0CE3B0080426B /* TVTListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TVTListViewController.h; sourceTree = "<group>"; };
+		B588969217F0CE3B0080426B /* TVTListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TVTListViewController.m; sourceTree = "<group>"; };
+		B588969417F0D0880080426B /* TVTCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TVTCell.h; sourceTree = "<group>"; };
+		B588969517F0D0880080426B /* TVTCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TVTCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +83,10 @@
 		B588965617F0CDF50080426B = {
 			isa = PBXGroup;
 			children = (
+				B588969117F0CE3B0080426B /* TVTListViewController.h */,
+				B588969217F0CE3B0080426B /* TVTListViewController.m */,
+				B588969417F0D0880080426B /* TVTCell.h */,
+				B588969517F0D0880080426B /* TVTCell.m */,
 				B588966817F0CDF50080426B /* TableViewTest */,
 				B588968117F0CDF50080426B /* TableViewTestTests */,
 				B588966117F0CDF50080426B /* Frameworks */,
@@ -192,6 +202,14 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Silent H Design";
 				TargetAttributes = {
+					B588965E17F0CDF50080426B = {
+						DevelopmentTeam = DNB8AA7292;
+						SystemCapabilities = {
+							com.apple.DataProtection = {
+								enabled = 0;
+							};
+						};
+					};
 					B588967917F0CDF50080426B = {
 						TestTargetID = B588965E17F0CDF50080426B;
 					};
@@ -241,6 +259,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B588966F17F0CDF50080426B /* main.m in Sources */,
+				B588969317F0CE3B0080426B /* TVTListViewController.m in Sources */,
+				B588969617F0D0880080426B /* TVTCell.m in Sources */,
 				B588967317F0CDF50080426B /* TVTAppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -360,10 +380,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TableViewTest/TableViewTest-Prefix.pch";
 				INFOPLIST_FILE = "TableViewTest/TableViewTest-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -373,10 +398,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TableViewTest/TableViewTest-Prefix.pch";
 				INFOPLIST_FILE = "TableViewTest/TableViewTest-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
