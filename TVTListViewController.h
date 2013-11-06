@@ -12,5 +12,6 @@
 {
     NSArray *dataArray;
     NSArray *nameArray;
+    NSArray *userNameArray;
 }
 @end

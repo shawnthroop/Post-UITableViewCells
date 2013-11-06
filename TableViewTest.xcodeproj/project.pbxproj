@@ -472,6 +472,7 @@
 				B588968D17F0CDF50080426B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B588968E17F0CDF50080426B /* Build configuration list for PBXNativeTarget "TableViewTestTests" */ = {
 			isa = XCConfigurationList;
@@ -480,6 +481,7 @@
 				B588969017F0CDF50080426B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

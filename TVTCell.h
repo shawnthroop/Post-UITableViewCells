@@ -14,14 +14,17 @@
 
 #define kHorizontalInsetRight 15.0f
 
-#define kVerticalInsetTop 17.5f
-#define kVerticalBodySpacing 8.0f
+#define kMainBaseline 41.5f
+
+#define kVerticalInset 17.5f
+#define kVerticalBodySpacing 10.0f
 
 
 @interface TVTCell : UITableViewCell
 
 @property (strong, nonatomic) IBOutlet UIImageView *profileImg;
 @property (strong, nonatomic) IBOutlet UILabel *fullNameLabel;
+@property (strong, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *bodyLabel;
 
 - (void)updateFonts;

@@ -9,6 +9,7 @@
 #import "TVTCell.h"
 
 #define fullNameColor [UIColor colorWithRed:47.0/255.0 green:47.0/255.0 blue:47.0/255.0 alpha:1.0]
+#define userNameColor [UIColor colorWithRed:137.0/255.0 green:137.0/255.0 blue:137.0/255.0 alpha:1.0]
 #define bodyColor [UIColor colorWithRed:126.0/255.0 green:126.0/255.0 blue:126.0/255.0 alpha:1.0]
 
 @interface TVTCell ()
@@ -27,7 +28,10 @@
     if (self) {
         
         // Profile Image for User
-        self.profileImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"default-profileImg.png"]];
+        self.profileImg = [[UIImageView alloc] init];
+        [self.profileImg setTranslatesAutoresizingMaskIntoConstraints:NO];
+//        self.profileImg.contentMode = UIViewContentModeScaleAspectFill;
+        self.profileImg.backgroundColor = [UIColor lightGrayColor];
         
         // Full Name of User
         self.fullNameLabel = [[UILabel alloc] init];
@@ -37,6 +41,15 @@
         [self.fullNameLabel setTextAlignment:NSTextAlignmentLeft];
         [self.fullNameLabel setTextColor:fullNameColor];
         [self.fullNameLabel setBackgroundColor:[UIColor clearColor]];
+        
+        // Username
+        self.userNameLabel = [[UILabel alloc] init];
+        [self.userNameLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [self.userNameLabel setLineBreakMode:NSLineBreakByTruncatingTail];
+        [self.userNameLabel setNumberOfLines:1];
+        [self.userNameLabel setTextAlignment:NSTextAlignmentLeft];
+        [self.userNameLabel setTextColor:userNameColor];
+        [self.userNameLabel setBackgroundColor:[UIColor clearColor]];
         
         // Body of Post
         self.bodyLabel = [[UILabel alloc] init];
@@ -52,6 +65,7 @@
         
         [self.contentView addSubview:self.profileImg];
         [self.contentView addSubview:self.fullNameLabel];
+        [self.contentView addSubview:self.userNameLabel];
         [self.contentView addSubview:self.bodyLabel];
         
         [self updateFonts];
@@ -63,39 +77,9 @@
 {
     [super updateConstraints];
     
-    
     if (self.didSetupConstraints) return;
     
-    // profileImg
-//    [self.contentView addConstraint:[NSLayoutConstraint
-//                                     constraintWithItem:self.profileImg
-//                                     attribute:NSLayoutAttributeLeading
-//                                     relatedBy:NSLayoutRelationEqual
-//                                     toItem:self.contentView
-//                                     attribute:NSLayoutAttributeLeading
-//                                     multiplier:1.0f
-//                                     constant:kProfileImgHorizontalInsetLeft]];
-//    
-//    [self.contentView addConstraint:[NSLayoutConstraint
-//                                     constraintWithItem:self.profileImg
-//                                     attribute:NSLayoutAttributeTop
-//                                     relatedBy:NSLayoutRelationEqual
-//                                     toItem:self.contentView
-//                                     attribute:NSLayoutAttributeTop
-//                                     multiplier:1.0f
-//                                     constant:(kVerticalInsetTop + 2)]];
-//    
-//    [self.contentView addConstraint:[NSLayoutConstraint
-//                                     constraintWithItem:self.profileImg
-//                                     attribute:NSLayoutAttributeTrailing
-//                                     relatedBy:NSLayoutRelationEqual
-//                                     toItem:self.contentView
-//                                     attribute:NSLayoutAttributeLeading
-//                                     multiplier:1.0f
-//                                     constant:(kProfileImgHorizontalInsetLeft +100)]];
     
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     // fullNameLabel
     [self.contentView addConstraint:[NSLayoutConstraint
                                      constraintWithItem:self.fullNameLabel
@@ -104,25 +88,107 @@
                                      toItem:self.contentView
                                      attribute:NSLayoutAttributeLeading
                                      multiplier:1.0f
-                                     constant:kFullNameHorizontalInsetLeft]];
-    
+                                     constant:50.0f]];
+
     [self.contentView addConstraint:[NSLayoutConstraint
                                      constraintWithItem:self.fullNameLabel
-                                     attribute:NSLayoutAttributeTop
+                                     attribute:NSLayoutAttributeBaseline
                                      relatedBy:NSLayoutRelationEqual
                                      toItem:self.contentView
                                      attribute:NSLayoutAttributeTop
                                      multiplier:1.0f
-                                     constant:(kVerticalInsetTop)]];
+                                     constant:kMainBaseline]];
+
+//    [self.contentView addConstraint:[NSLayoutConstraint
+//                                     constraintWithItem:self.fullNameLabel
+//                                     attribute:NSLayoutAttributeTop
+//                                     relatedBy:NSLayoutRelationEqual
+//                                     toItem:self.contentView
+//                                     attribute:NSLayoutAttributeTop
+//                                     multiplier:1.0f
+//                                     constant:(kVerticalInsetTop)]];
     
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    
+    // userNameLabel
     [self.contentView addConstraint:[NSLayoutConstraint
-                                     constraintWithItem:self.fullNameLabel
-                                     attribute:NSLayoutAttributeTrailing
+                                     constraintWithItem:self.userNameLabel
+                                     attribute:NSLayoutAttributeLeading
                                      relatedBy:NSLayoutRelationEqual
-                                     toItem:self.contentView
+                                     toItem:self.fullNameLabel
                                      attribute:NSLayoutAttributeTrailing
                                      multiplier:1.0f
-                                     constant:-kHorizontalInsetRight]];
+                                     constant:(10.0f + self.fullNameLabel.bounds.size.width)]];
+    
+    
+    [self.contentView addConstraint:[NSLayoutConstraint
+                                     constraintWithItem:self.userNameLabel
+                                     attribute:NSLayoutAttributeBaseline
+                                     relatedBy:NSLayoutRelationEqual
+                                     toItem:self.contentView
+                                     attribute:NSLayoutAttributeTop
+                                     multiplier:1.0f
+                                     constant:kMainBaseline]];
+
+    
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    
+    // profileImg
+    [self.contentView addConstraint:[NSLayoutConstraint
+                                     constraintWithItem:self.profileImg
+                                     attribute:NSLayoutAttributeLeading
+                                     relatedBy:NSLayoutRelationEqual
+                                     toItem:self.contentView
+                                     attribute:NSLayoutAttributeLeading
+                                     multiplier:1.0f
+                                     constant:kProfileImgHorizontalInsetLeft]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint
+                                     constraintWithItem:self.profileImg
+                                     attribute:NSLayoutAttributeBottom
+                                     relatedBy:NSLayoutRelationEqual
+                                     toItem:self.contentView
+                                     attribute:NSLayoutAttributeTop
+                                     multiplier:1.0f
+                                     constant:(kMainBaseline + 1)]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint
+                                     constraintWithItem:self.profileImg
+                                     attribute:NSLayoutAttributeWidth
+                                     relatedBy:NSLayoutRelationEqual
+                                     toItem:nil
+                                     attribute:NSLayoutAttributeNotAnAttribute
+                                     multiplier:1.0f
+                                     constant:20.0f]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint
+                                     constraintWithItem:self.profileImg
+                                     attribute:NSLayoutAttributeHeight
+                                     relatedBy:NSLayoutRelationEqual
+                                     toItem:nil
+                                     attribute:NSLayoutAttributeNotAnAttribute
+                                     multiplier:1.0f
+                                     constant:20.0f]];
+
+//    [self.contentView addConstraint:[NSLayoutConstraint
+//                                     constraintWithItem:self.profileImg
+//                                     attribute:NSLayoutAttributeHeight
+//                                     relatedBy:NSLayoutRelationEqual
+//                                     toItem:self.fullNameLabel
+//                                     attribute:NSLayoutAttributeHeight
+//                                     multiplier:1.0f
+//                                     constant:0]];
+
+//    [self.contentView addConstraint:[NSLayoutConstraint
+//                                     constraintWithItem:self.profileImg
+//                                     attribute:NSLayoutAttributeWidth
+//                                     relatedBy:NSLayoutRelationEqual
+//                                     toItem:self.fullNameLabel
+//                                     attribute:NSLayoutAttributeHeight
+//                                     multiplier:1.0f
+//                                     constant:0]];
     
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
@@ -141,10 +207,10 @@
                                       constraintWithItem:self.bodyLabel
                                       attribute:NSLayoutAttributeTop
                                       relatedBy:NSLayoutRelationEqual
-                                      toItem:self.fullNameLabel
-                                      attribute:NSLayoutAttributeBottom
+                                      toItem:self.contentView
+                                      attribute:NSLayoutAttributeTop
                                       multiplier:1.0f
-                                      constant:(kVerticalBodySpacing)]];
+                                      constant:(kVerticalBodySpacing + kMainBaseline)]];
     
     [self.contentView  addConstraint:[NSLayoutConstraint
                                       constraintWithItem:self.bodyLabel
@@ -162,7 +228,7 @@
                                       toItem:self.contentView
                                       attribute:NSLayoutAttributeBottom
                                       multiplier:1.0f
-                                      constant:-kVerticalInsetTop]];
+                                      constant:-kVerticalInset]];
     
     self.didSetupConstraints = YES;
 }
@@ -186,8 +252,12 @@
 
 - (void)updateFonts
 {
-    self.fullNameLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline];
-    self.bodyLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+    self.fullNameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light"
+                                              size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize + 6];
+    self.bodyLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light"
+                                              size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize];
+    self.userNameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light"
+                                          size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize - 3];
 }
 
 
