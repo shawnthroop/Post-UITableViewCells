@@ -128,7 +128,9 @@ static NSString *CellIdentifier = @"PostCell";
     [cell.fullNameLabel setText:[nameArray objectAtIndex:indexPath.row]];
     [cell.userNameLabel setText:[userNameArray objectAtIndex:indexPath.row]];
     [cell.profileImg setImage:[UIImage imageNamed:@"profileImg-default.png"]];
-    [cell.bodyLabel setText:[dataArray objectAtIndex:indexPath.row]];
+//    [cell.bodyLabel setText:[dataArray objectAtIndex:indexPath.row]];
+    
+    [cell.bodyTextView setText:[dataArray objectAtIndex:indexPath.row]];
     
 //    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:[dataArray objectAtIndex:indexPath.row]
 //                                                                                         attributes:@{ NSKernAttributeName: @(0.1f) }];
