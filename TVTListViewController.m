@@ -23,35 +23,42 @@ static NSString *CellIdentifier = @"PostCell";
     self = [super initWithStyle:style];
     if (self) {
         dataArray = [NSArray arrayWithObjects:
-                     @"Now it’s Oscar the Grouch and some of his lady friends singing “Grouch Girls Don’t Wanna Have Fun.” This station is beyond great.",
-                     @"Something tells me this won’t be the last Ballmer public self humiliation we’ll be seeing.",
-                     @"Time-shifted TV watching has turned us into feral knowledge-repulsed animals who would shiv our own grandmothers.",
-                     @"Like savvy companies, @marcoarment wants to own every part of the supply chain to ensure the best @atpfm experience. Next up: a phone and OS",
-                     @"USAir’s flight attendants are using the loudspeaker to advertise a “special offer” to sign up for their credit card.",
-                     @"anytime you want to get @mattsinger to smile from here on out, just go up to him & say 'Hello, Mr. Ninja' in a British accent",
-                     @"Uptime Calendar for iPhone - http://loopu.in/18PZnj2",
-                     @"Velocity for iPhone - http://bpxl.me/14AmGKk",
-                     @"Just ordered my shiny new 15-inch MacBook Pro with Retina Display. So excited! Can't wait for daddy to come back from the US!", nil];
+                     @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent non quam ac massa viverra semper. Maecenas mattis justo ac augue volutpat congue. Maecenas laoreet, nulla eu faucibus gravida,",
+                     @"Vestibulum ut est id mauris ultrices gravida. Nulla malesuada metus ut erat malesuada, vitae ornare neque semper. Aenean a commodo justo, vel placerat odio. Curabitur vitae consequat tortor. Aenean eu magna ante.",
+//                     @"Now it’s Oscar the Grouch and some of his lady friends singing “Grouch Girls Don’t Wanna Have Fun.” This station is beyond great.",
+//                     @"Something tells me this won’t be the last Ballmer public self humiliation we’ll be seeing.",
+//                     @"Time-shifted TV watching has turned us into feral knowledge-repulsed animals who would shiv our own grandmothers.",
+//                     @"Like savvy companies, @marcoarment wants to own every part of the supply chain to ensure the best @atpfm experience. Next up: a phone and OS",
+//                     @"USAir’s flight attendants are using the loudspeaker to advertise a “special offer” to sign up for their credit card.",
+//                     @"anytime you want to get @mattsinger to smile from here on out, just go up to him & say 'Hello, Mr. Ninja' in a British accent",
+//                     @"Uptime Calendar for iPhone - http://loopu.in/18PZnj2",
+//                     @"Velocity for iPhone - http://bpxl.me/14AmGKk",
+//                     @"Just ordered my shiny new 15-inch MacBook Pro with Retina Display. So excited! Can't wait for daddy to come back from the US!",
+                     nil];
         nameArray = [NSArray arrayWithObjects:
-                     @"Jared Sinclair",
-                     @"Jesse James Herlitz",
-                     @"Mike Monteiro",
-                     @"David Deller",
-                     @"Marco Arment",
-                     @"ErikDavis",
-                     @"The Loop",
-                     @"Beautiful Pixels",
-                     @"Lele Buonerba", nil];
+                     @"Random User",
+                     @"Billy Bob",
+//                     @"Jesse James Herlitz",
+//                     @"Mike Monteiro",
+//                     @"David Deller",
+//                     @"Marco Arment",
+//                     @"ErikDavis",
+//                     @"The Loop",
+//                     @"Beautiful Pixels",
+//                     @"Lele Buonerba",
+                     nil];
         userNameArray = [NSArray arrayWithObjects:
-                         @"@jaredsinclair",
-                         @"@strike",
-                         @"@Mike_FTW",
-                         @"@dmdeller",
-                         @"@marcoarment",
-                         @"@ErikDavis",
-                         @"@theloop",
-                         @"@beautifulpixels",
-                         @"@lele", nil];
+                         @"@username",
+                         @"@horton",
+//                         @"@strike",
+//                         @"@Mike_FTW",
+//                         @"@dmdeller",
+//                         @"@marcoarment",
+//                         @"@ErikDavis",
+//                         @"@theloop",
+//                         @"@beautifulpixels",
+//                         @"@lele",
+                         nil];
         
         
         self.title = @"Table View Test Controller";
@@ -67,12 +74,10 @@ static NSString *CellIdentifier = @"PostCell";
     [super viewDidLoad];
     
     [[self tableView] registerClass:[TVTCell class] forCellReuseIdentifier:CellIdentifier];
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
+
+
+
 
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -83,6 +88,8 @@ static NSString *CellIdentifier = @"PostCell";
                                                  name:UIContentSizeCategoryDidChangeNotification
                                                object:nil];
 }
+
+
 
 - (void)viewDidDisappear:(BOOL)animated
 {
@@ -98,6 +105,7 @@ static NSString *CellIdentifier = @"PostCell";
 {
     [self.tableView reloadData];
 }
+
 
 
 - (void)didReceiveMemoryWarning
@@ -121,24 +129,23 @@ static NSString *CellIdentifier = @"PostCell";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    TVTCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    TVTCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     [cell updateFonts];
     
+    // Populate labels
     [cell.fullNameLabel setText:[nameArray objectAtIndex:indexPath.row]];
     [cell.userNameLabel setText:[userNameArray objectAtIndex:indexPath.row]];
     [cell.profileImg setImage:[UIImage imageNamed:@"profileImg-default.png"]];
-//    [cell.bodyLabel setText:[dataArray objectAtIndex:indexPath.row]];
     
+    // Populate the Text Field
     [cell.bodyTextView setText:[dataArray objectAtIndex:indexPath.row]];
     
-//    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:[dataArray objectAtIndex:indexPath.row]
-//                                                                                         attributes:@{ NSKernAttributeName: @(0.1f) }];
-//    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-//    [paragraphStyle setLineSpacing:2];
-//    [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [[dataArray objectAtIndex:indexPath.row] length])];
-//    cell.bodyLabel.attributedText = attributedString;
-
+    // Set the frame of bodyTextView
+    CGRect bodyFrame = cell.bodyTextView.frame;
+    bodyFrame.size.width = tableView.bounds.size.width - (kBodyHorizontalInsetLeft + kInsetRight);
+    bodyFrame.size.height = cell.bodyTextView.contentSize.height;
+    cell.bodyTextView.frame = bodyFrame;
     
     // Make sure the constraints have been added to this cell, since it may have just been created from scratch
     [cell setNeedsUpdateConstraints];
@@ -152,14 +159,21 @@ static NSString *CellIdentifier = @"PostCell";
     
     [cell updateFonts];
     
+    // Populate labels
     [cell.fullNameLabel setText:[nameArray objectAtIndex:indexPath.row]];
-//    [cell.bodyLabel setText:[dataArray objectAtIndex:indexPath.row]];
-//    
-//    cell.bodyLabel.preferredMaxLayoutWidth = tableView.bounds.size.width - (kBodyHorizontalInsetLeft + kHorizontalInsetRight);
+    [cell.userNameLabel setText:[userNameArray objectAtIndex:indexPath.row]];
+    [cell.profileImg setImage:[UIImage imageNamed:@"profileImg-default.png"]];
     
+    // Populate the Text Field
     [cell.bodyTextView setText:[dataArray objectAtIndex:indexPath.row]];
     
-    cell.bodyLabel.preferredMaxLayoutWidth = tableView.bounds.size.width - (kBodyHorizontalInsetLeft + kHorizontalInsetRight);
+    // Set the frame of bodyTextView
+    CGRect bodyFrame = cell.bodyTextView.frame;
+    bodyFrame.size.width = tableView.bounds.size.width - (kBodyHorizontalInsetLeft + kInsetRight);
+    bodyFrame.size.height = cell.bodyTextView.contentSize.height;
+    cell.bodyTextView.frame = bodyFrame;
+    
+    NSLog(@"Body Text Content Height: %f", bodyFrame.size.height);
     
     [cell setNeedsUpdateConstraints];
     [cell updateConstraintsIfNeeded];
@@ -167,9 +181,12 @@ static NSString *CellIdentifier = @"PostCell";
     [cell.contentView layoutIfNeeded];
     
     CGFloat height = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+
+    NSLog(@"bodyTextView.frame: %f,%f", cell.bodyTextView.frame.size.width, cell.bodyTextView.frame.size.height);
+    NSLog(@"contentView.frame: %f,%f", cell.contentView.frame.size.width, cell.contentView.frame.size.height);
     
-//    return height;
-    return 200.0f;
+    return height;
+//    return 200.0f;
 }
 
 

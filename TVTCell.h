@@ -13,6 +13,7 @@
 #define kFullNameHorizontalInsetLeft 50.0f
 
 #define kHorizontalInsetRight 15.0f
+#define kInsetRight 15.0f
 
 #define kMainBaseline 41.5f
 
