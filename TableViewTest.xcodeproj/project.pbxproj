@@ -21,6 +21,7 @@
 		B588968817F0CDF50080426B /* TableViewTestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B588968717F0CDF50080426B /* TableViewTestTests.m */; };
 		B588969317F0CE3B0080426B /* TVTListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B588969217F0CE3B0080426B /* TVTListViewController.m */; };
 		B588969617F0D0880080426B /* TVTCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B588969517F0D0880080426B /* TVTCell.m */; };
+		B5952A9D182BF8080088E98A /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B5952A9C182BF8080088E98A /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,7 @@
 		B588969217F0CE3B0080426B /* TVTListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TVTListViewController.m; sourceTree = "<group>"; };
 		B588969417F0D0880080426B /* TVTCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TVTCell.h; sourceTree = "<group>"; };
 		B588969517F0D0880080426B /* TVTCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TVTCell.m; sourceTree = "<group>"; };
+		B5952A9C182BF8080088E98A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +93,7 @@
 				B588968117F0CDF50080426B /* TableViewTestTests */,
 				B588966117F0CDF50080426B /* Frameworks */,
 				B588966017F0CDF50080426B /* Products */,
+				B5952A9C182BF8080088E98A /* README.md */,
 			);
 			sourceTree = "<group>";
 		};
@@ -238,6 +241,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B5952A9D182BF8080088E98A /* README.md in Resources */,
 				B588966D17F0CDF50080426B /* InfoPlist.strings in Resources */,
 				B588967517F0CDF50080426B /* Images.xcassets in Resources */,
 			);
