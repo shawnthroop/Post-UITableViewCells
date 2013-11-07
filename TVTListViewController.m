@@ -153,7 +153,11 @@ static NSString *CellIdentifier = @"PostCell";
     [cell updateFonts];
     
     [cell.fullNameLabel setText:[nameArray objectAtIndex:indexPath.row]];
-    [cell.bodyLabel setText:[dataArray objectAtIndex:indexPath.row]];
+//    [cell.bodyLabel setText:[dataArray objectAtIndex:indexPath.row]];
+//    
+//    cell.bodyLabel.preferredMaxLayoutWidth = tableView.bounds.size.width - (kBodyHorizontalInsetLeft + kHorizontalInsetRight);
+    
+    [cell.bodyTextView setText:[dataArray objectAtIndex:indexPath.row]];
     
     cell.bodyLabel.preferredMaxLayoutWidth = tableView.bounds.size.width - (kBodyHorizontalInsetLeft + kHorizontalInsetRight);
     
@@ -164,7 +168,8 @@ static NSString *CellIdentifier = @"PostCell";
     
     CGFloat height = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
     
-    return height;
+//    return height;
+    return 200.0f;
 }
 
 
