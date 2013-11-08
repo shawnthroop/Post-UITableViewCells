@@ -91,7 +91,8 @@
     // Randomly choose words for variable length
     //
     //    int r = arc4random() % [lorumIpsumArray count];
-    int r = arc4random() % randomUserNames.count -1;
+    int r = arc4random() % randomUserNames.count - 2;
+    r = abs(r);
     NSArray *randomUserArray = [randomUserNames objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(r, 2)]];
     
     NSString *sSimple = [NSString stringWithFormat:@"%@!!!", [randomUserArray componentsJoinedByString:@" "]];
