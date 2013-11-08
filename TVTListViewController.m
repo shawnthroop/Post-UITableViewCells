@@ -8,12 +8,13 @@
 
 #import "TVTListViewController.h"
 #import "TVTCell.h"
+#import "RJModel.h"
 
 
 static NSString *CellIdentifier = @"PostCell";
 
 @interface TVTListViewController ()
-
+@property (strong, nonatomic) RJModel *model;
 @end
 
 @implementation TVTListViewController
@@ -22,9 +23,17 @@ static NSString *CellIdentifier = @"PostCell";
 {
     self = [super initWithStyle:style];
     if (self) {
-        dataArray = [NSArray arrayWithObjects:
-                     @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent non quam ac massa viverra semper. Maecenas mattis justo ac augue volutpat congue. Maecenas laoreet, nulla eu faucibus gravida,",
-                     @"Vestibulum ut est id mauris ultrices gravida. Nulla malesuada metus ut erat malesuada, vitae ornare neque semper. Aenean a commodo justo, vel placerat odio. Curabitur vitae consequat tortor. Aenean eu magna ante.",
+        
+//        UIFont *nameFont= [UIFont fontWithName:@"HelveticaNeue-Light" size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize + 6];
+//        UIFont *userFont= [UIFont fontWithName:@"HelveticaNeue-Light" size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize - 3];
+//        UIFont *bodyFont = [UIFont fontWithName:@"HelveticaNeue-Light" size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize];
+//        
+//        NSAttributedString *attrStringBody = [[NSAttributedString alloc] initWithString:@"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent non quam ac massa viverra semper. Maecenas mattis justo ac augue volutpat congue. Maecenas laoreet, nulla eu faucibus" attributes:@{NSFontAttributeName: bodyFont}];
+//        NSAttributedString *attrStringName = [[NSAttributedString alloc] initWithString:@"Random User" attributes:@{NSFontAttributeName: nameFont}];
+//        NSAttributedString *attrStringUser = [[NSAttributedString alloc] initWithString:@"username" attributes:@{NSFontAttributeName: userFont}];
+        
+//        dataArray = [NSArray arrayWithObjects:
+//                     attrStringBody,
 //                     @"Now it’s Oscar the Grouch and some of his lady friends singing “Grouch Girls Don’t Wanna Have Fun.” This station is beyond great.",
 //                     @"Something tells me this won’t be the last Ballmer public self humiliation we’ll be seeing.",
 //                     @"Time-shifted TV watching has turned us into feral knowledge-repulsed animals who would shiv our own grandmothers.",
@@ -34,10 +43,9 @@ static NSString *CellIdentifier = @"PostCell";
 //                     @"Uptime Calendar for iPhone - http://loopu.in/18PZnj2",
 //                     @"Velocity for iPhone - http://bpxl.me/14AmGKk",
 //                     @"Just ordered my shiny new 15-inch MacBook Pro with Retina Display. So excited! Can't wait for daddy to come back from the US!",
-                     nil];
-        nameArray = [NSArray arrayWithObjects:
-                     @"Random User",
-                     @"Billy Bob",
+//                     nil];
+//        nameArray = [NSArray arrayWithObjects:
+//                     attrStringName,
 //                     @"Jesse James Herlitz",
 //                     @"Mike Monteiro",
 //                     @"David Deller",
@@ -46,10 +54,9 @@ static NSString *CellIdentifier = @"PostCell";
 //                     @"The Loop",
 //                     @"Beautiful Pixels",
 //                     @"Lele Buonerba",
-                     nil];
-        userNameArray = [NSArray arrayWithObjects:
-                         @"@username",
-                         @"@horton",
+//                     nil];
+//        userNameArray = [NSArray arrayWithObjects:
+//                         attrStringUser,
 //                         @"@strike",
 //                         @"@Mike_FTW",
 //                         @"@dmdeller",
@@ -58,8 +65,10 @@ static NSString *CellIdentifier = @"PostCell";
 //                         @"@theloop",
 //                         @"@beautifulpixels",
 //                         @"@lele",
-                         nil];
-        
+//                         nil];
+//        
+        self.model = [[RJModel alloc] init];
+        [self.model populateDataSource];
         
         self.title = @"Table View Test Controller";
         [self.tableView setSeparatorInset:UIEdgeInsetsZero];
@@ -132,11 +141,17 @@ static NSString *CellIdentifier = @"PostCell";
     
     [cell updateFonts];
     
-    // Populate labels
-    [cell.fullNameLabel setText:[nameArray objectAtIndex:indexPath.row]];
-    [cell.userNameLabel setText:[userNameArray objectAtIndex:indexPath.row]];
     [cell.profileImg setImage:[UIImage imageNamed:@"profileImg-default.png"]];
-    [cell.bodyLabel setText:[dataArray objectAtIndex:indexPath.row]];
+    
+    // Populate labels
+    NSDictionary *dataSourceItem = [self.model.dataSource objectAtIndex:indexPath.row];
+    
+    cell.fullNameLabel.attributedText =  [dataSourceItem valueForKey:@"name"];
+    cell.userNameLabel.attributedText =  [dataSourceItem valueForKey:@"user"];
+    cell.bodyLabel.attributedText = [dataSourceItem valueForKey:@"body"];
+    
+//    NSLog(@"data: %@ | %@", [dataSourceItem valueForKey:@"title"], [dataSourceItem valueForKey:@"body"]);
+    
     
     cell.bodyLabel.userInteractionEnabled = YES;
     cell.fullNameLabel.userInteractionEnabled = YES;
@@ -144,20 +159,11 @@ static NSString *CellIdentifier = @"PostCell";
     for(UIView *view in cell.contentView.subviews) {
         if(view.tag <= TappedName) {
             UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
+            tap.view.tag = indexPath.row;
             [tap setNumberOfTapsRequired:1];
             [view addGestureRecognizer:tap];
         }
     }
-    
-    // User interaction
-    cell.bodyLabel.userInteractionEnabled = YES;
-    UIGestureRecognizer *tapGesture = [[UIGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
-    [cell.bodyLabel addGestureRecognizer:tapGesture];
-    
-    
-//    NSMutableAttributedString *bodyText = [[NSMutableAttributedString alloc] initWithAttributedString:[[NSAttributedString alloc] initWithString:[dataArray objectAtIndex:indexPath.row] attributes:<#(NSDictionary *)#>] label.attributedText];
-//    [text addAttribute: NSForegroundColorAttributeName value: [UIColor redColor] range: NSMakeRange(10, 1)];
-//    [label setAttributedText: text];
     
     // Make sure the constraints have been added to this cell, since it may have just been created from scratch
     [cell setNeedsUpdateConstraints];
@@ -171,11 +177,13 @@ static NSString *CellIdentifier = @"PostCell";
     
     [cell updateFonts];
     
-    // Populate labels
-    [cell.fullNameLabel setText:[nameArray objectAtIndex:indexPath.row]];
-    [cell.userNameLabel setText:[userNameArray objectAtIndex:indexPath.row]];
     [cell.profileImg setImage:[UIImage imageNamed:@"profileImg-default.png"]];
-    [cell.bodyLabel setText:[dataArray objectAtIndex:indexPath.row]];
+    
+    // Populate labels
+    NSDictionary *dataSourceItem = [self.model.dataSource objectAtIndex:indexPath.row];
+    cell.fullNameLabel.attributedText =  [dataSourceItem valueForKey:@"name"];
+    cell.userNameLabel.attributedText =  [dataSourceItem valueForKey:@"user"];
+    cell.bodyLabel.attributedText = [dataSourceItem valueForKey:@"body"];
     
     cell.bodyLabel.preferredMaxLayoutWidth = tableView.bounds.size.width - (kBodyHorizontalInsetLeft + kInsetRight);
     
@@ -204,7 +212,31 @@ static NSString *CellIdentifier = @"PostCell";
 {
     NSLog(@"Tap: %d", gr.view.tag);
     CGPoint p = [gr locationInView:gr.view];
-    NSLog(@"%f, %f", p.x, p.y);
+//    NSLog(@"%f, %f", p.x, p.y);
+    
+    UILabel *tappedLabel = (UILabel *)gr.view;
+    
+    
+    NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
+    NSTextContainer *textContainer = [[NSTextContainer alloc] initWithSize:gr.view.bounds.size];
+    
+//    NSLog(@"label size: %f, %f", gr.view.bounds.size.width, gr.view.bounds.size.height);
+//    NSLog(@"textContainer size: %f, %f", textContainer.size.width, textContainer.size.height);
+    
+    NSTextStorage *textStorage = [[NSTextStorage alloc] initWithAttributedString:tappedLabel.attributedText];
+    
+//    NSLog(@"Attributed String: %@", tappedLabel.attributedText);
+    
+    [layoutManager setTextStorage:textStorage];
+    [layoutManager addTextContainer:textContainer];
+    
+    NSUInteger charIndex = [layoutManager characterIndexForPoint:p inTextContainer:textContainer fractionOfDistanceBetweenInsertionPoints:NULL];
+//    NSLog(@"%ul", charIndex);
+    
+    unichar uChar = [textStorage.string characterAtIndex:charIndex];
+    NSString *s = [NSString stringWithCharacters:&uChar length:1];
+    NSLog(@"Character Index: %d, Character: %@", charIndex, s);
+
 }
 
 

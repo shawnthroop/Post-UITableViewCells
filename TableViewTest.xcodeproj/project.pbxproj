@@ -22,6 +22,7 @@
 		B588969317F0CE3B0080426B /* TVTListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B588969217F0CE3B0080426B /* TVTListViewController.m */; };
 		B588969617F0D0880080426B /* TVTCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B588969517F0D0880080426B /* TVTCell.m */; };
 		B5952A9D182BF8080088E98A /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B5952A9C182BF8080088E98A /* README.md */; };
+		B5952AA0182D55D00088E98A /* RJModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B5952A9F182D55D00088E98A /* RJModel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,8 @@
 		B588969417F0D0880080426B /* TVTCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TVTCell.h; sourceTree = "<group>"; };
 		B588969517F0D0880080426B /* TVTCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TVTCell.m; sourceTree = "<group>"; };
 		B5952A9C182BF8080088E98A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		B5952A9E182D55D00088E98A /* RJModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RJModel.h; sourceTree = "<group>"; };
+		B5952A9F182D55D00088E98A /* RJModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RJModel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +92,8 @@
 				B588969217F0CE3B0080426B /* TVTListViewController.m */,
 				B588969417F0D0880080426B /* TVTCell.h */,
 				B588969517F0D0880080426B /* TVTCell.m */,
+				B5952A9E182D55D00088E98A /* RJModel.h */,
+				B5952A9F182D55D00088E98A /* RJModel.m */,
 				B588966817F0CDF50080426B /* TableViewTest */,
 				B588968117F0CDF50080426B /* TableViewTestTests */,
 				B588966117F0CDF50080426B /* Frameworks */,
@@ -263,6 +268,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B588966F17F0CDF50080426B /* main.m in Sources */,
+				B5952AA0182D55D00088E98A /* RJModel.m in Sources */,
 				B588969317F0CE3B0080426B /* TVTListViewController.m in Sources */,
 				B588969617F0D0880080426B /* TVTCell.m in Sources */,
 				B588967317F0CDF50080426B /* TVTAppDelegate.m in Sources */,

@@ -17,9 +17,9 @@
     // Override point for customization after application launch.
     
     TVTListViewController *listViewController = [[TVTListViewController alloc] init];
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:listViewController];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:listViewController];
     
-    [[self window] setRootViewController:navController];
+    [[self window] setRootViewController:navigationController];
     
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];

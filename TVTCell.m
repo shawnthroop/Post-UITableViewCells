@@ -198,10 +198,10 @@
 
 - (void)updateFonts
 {
-    self.fullNameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light"
-                                              size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize + 6];
-    self.bodyLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light"
-                                          size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize];
+//    self.fullNameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light"
+//                                              size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize + 6];
+//    self.bodyLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light"
+//                                          size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize];
     self.userNameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light"
                                           size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize - 3];
 }
