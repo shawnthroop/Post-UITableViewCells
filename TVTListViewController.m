@@ -137,15 +137,11 @@ static NSString *CellIdentifier = @"PostCell";
     [cell.fullNameLabel setText:[nameArray objectAtIndex:indexPath.row]];
     [cell.userNameLabel setText:[userNameArray objectAtIndex:indexPath.row]];
     [cell.profileImg setImage:[UIImage imageNamed:@"profileImg-default.png"]];
+    [cell.bodyLabel setText:[dataArray objectAtIndex:indexPath.row]];
     
-    // Populate the Text Field
-    [cell.bodyTextView setText:[dataArray objectAtIndex:indexPath.row]];
-    
-    // Set the frame of bodyTextView
-    CGRect bodyFrame = cell.bodyTextView.frame;
-    bodyFrame.size.width = tableView.bounds.size.width - (kBodyHorizontalInsetLeft + kInsetRight);
-    bodyFrame.size.height = cell.bodyTextView.contentSize.height;
-    cell.bodyTextView.frame = bodyFrame;
+//    NSMutableAttributedString *bodyText = [[NSMutableAttributedString alloc] initWithAttributedString:[[NSAttributedString alloc] initWithString:[dataArray objectAtIndex:indexPath.row] attributes:<#(NSDictionary *)#>] label.attributedText];
+//    [text addAttribute: NSForegroundColorAttributeName value: [UIColor redColor] range: NSMakeRange(10, 1)];
+//    [label setAttributedText: text];
     
     // Make sure the constraints have been added to this cell, since it may have just been created from scratch
     [cell setNeedsUpdateConstraints];
@@ -163,17 +159,9 @@ static NSString *CellIdentifier = @"PostCell";
     [cell.fullNameLabel setText:[nameArray objectAtIndex:indexPath.row]];
     [cell.userNameLabel setText:[userNameArray objectAtIndex:indexPath.row]];
     [cell.profileImg setImage:[UIImage imageNamed:@"profileImg-default.png"]];
+    [cell.bodyLabel setText:[dataArray objectAtIndex:indexPath.row]];
     
-    // Populate the Text Field
-    [cell.bodyTextView setText:[dataArray objectAtIndex:indexPath.row]];
-    
-    // Set the frame of bodyTextView
-    CGRect bodyFrame = cell.bodyTextView.frame;
-    bodyFrame.size.width = tableView.bounds.size.width - (kBodyHorizontalInsetLeft + kInsetRight);
-    bodyFrame.size.height = cell.bodyTextView.contentSize.height;
-    cell.bodyTextView.frame = bodyFrame;
-    
-    NSLog(@"Body Text Content Height: %f", bodyFrame.size.height);
+    cell.bodyLabel.preferredMaxLayoutWidth = tableView.bounds.size.width - (kBodyHorizontalInsetLeft + kInsetRight);
     
     [cell setNeedsUpdateConstraints];
     [cell updateConstraintsIfNeeded];
@@ -181,12 +169,8 @@ static NSString *CellIdentifier = @"PostCell";
     [cell.contentView layoutIfNeeded];
     
     CGFloat height = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
-
-    NSLog(@"bodyTextView.frame: %f,%f", cell.bodyTextView.frame.size.width, cell.bodyTextView.frame.size.height);
-    NSLog(@"contentView.frame: %f,%f", cell.contentView.frame.size.width, cell.contentView.frame.size.height);
     
     return height;
-//    return 200.0f;
 }
 
 

@@ -26,8 +26,7 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        
-        self.contentView.backgroundColor = [UIColor greenColor];
+        self.contentView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
         
         // Profile Image for User
         self.profileImg = [[UIImageView alloc] init];
@@ -37,11 +36,11 @@
         // Full Name of User
         self.fullNameLabel = [[UILabel alloc] init];
         self.fullNameLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        [self.fullNameLabel setLineBreakMode:NSLineBreakByTruncatingTail];
-        [self.fullNameLabel setNumberOfLines:1];
-        [self.fullNameLabel setTextAlignment:NSTextAlignmentLeft];
-        [self.fullNameLabel setTextColor:fullNameColor];
-        [self.fullNameLabel setBackgroundColor:[UIColor blueColor]];
+        self.fullNameLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+        self.fullNameLabel.numberOfLines = 1;
+        self.fullNameLabel.textAlignment = NSTextAlignmentLeft;
+        self.fullNameLabel.textColor = fullNameColor;
+        self.fullNameLabel.backgroundColor = [UIColor clearColor];
         
         // Username
         self.userNameLabel = [[UILabel alloc] init];
@@ -50,32 +49,32 @@
         [self.userNameLabel setNumberOfLines:1];
         [self.userNameLabel setTextAlignment:NSTextAlignmentLeft];
         [self.userNameLabel setTextColor:userNameColor];
-        [self.userNameLabel setBackgroundColor:[UIColor redColor]];
+        [self.userNameLabel setBackgroundColor:[UIColor clearColor]];
         
         // Post Body
-        self.bodyTextView = [[UITextView alloc] init];
-        self.bodyTextView.translatesAutoresizingMaskIntoConstraints = NO;
-
-        [self.bodyTextView setContentCompressionResistancePriority:UILayoutPriorityRequired
-                                                        forAxis:UILayoutConstraintAxisVertical];
-        [self.bodyTextView setEditable:NO];
-        [self.bodyTextView setTextAlignment:NSTextAlignmentLeft];
-        [self.bodyTextView setTextColor:bodyColor];
-        [self.bodyTextView setBackgroundColor:[UIColor orangeColor]];
-
+        self.bodyLabel = [[UILabel alloc] init];
+        [self.bodyLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
+        [self.bodyLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
+        [self.bodyLabel setLineBreakMode:NSLineBreakByTruncatingTail];
+        [self.bodyLabel setNumberOfLines:0];
+        [self.bodyLabel setTextAlignment:NSTextAlignmentLeft];
+        [self.bodyLabel setTextColor:bodyColor];
+        [self.bodyLabel setBackgroundColor:[UIColor clearColor]];
         
         
         [self.contentView addSubview:self.profileImg];
         [self.contentView addSubview:self.fullNameLabel];
         [self.contentView addSubview:self.userNameLabel];
-//        [self.contentView addSubview:self.bodyLabel];
-        [self.contentView addSubview:self.bodyTextView];
-
-        NSLog(@"Added Subviews to contentView");
+        [self.contentView addSubview:self.bodyLabel];
         
         [self updateFonts];
     }
     return self;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
 }
 
 - (void)updateConstraints
@@ -83,70 +82,93 @@
     [super updateConstraints];
     
     
-//    // Set the frame of bodyTextView
-//    CGRect bodyFrame = self.bodyTextView.frame;
-//    bodyFrame.size.width = 320 - (kBodyHorizontalInsetLeft + kInsetRight);
-//    bodyFrame.size.height = self.bodyTextView.contentSize.height;
-//    self.bodyTextView.frame = bodyFrame;
+    if (self.didSetupConstraints) return;
+    
+    NSDictionary *viewsDictionary = @{@"pImg" : self.profileImg,
+                                      @"fullName" : self.fullNameLabel,
+                                      @"userName" : self.userNameLabel,
+                                      @"bodyText" : self.bodyLabel,
+                                      @"contentView" : self.contentView };
+    
+    NSDictionary *metricsDictionary = @{@"BodyInsetL" : @30.0f,
+                            @"ProfileInsetL" : @20.0f,
+                            @"FullInsetL" : @50.0f,
+                            @"InsetR" : @15.0f,
+                            @"MainBaseline" : @41.5f,
+                            @"InsetV" : @17.5f,
+                            @"InnerSpacing" : @10.0f};
+    
+
+    NSArray *constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[pImg(==20)]-(InnerSpacing)-[bodyText(>=1)]-(InsetV)-|" options:0 metrics:metricsDictionary views:viewsDictionary];
+    [self.contentView addConstraints:constraints];
+    
+    constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(ProfileInsetL)-[pImg(==20)]-(InnerSpacing)-[fullName]-(InnerSpacing)-[userName]" options:0 metrics:metricsDictionary views:viewsDictionary];
+    [self.contentView addConstraints:constraints];
     
     
-    if (self.didSetupConstraints) {
-        return;
-    } else {
-        
-        NSDictionary *viewsDictionary = @{@"pImg" : self.profileImg,
-                                          @"fullName" : self.fullNameLabel,
-                                          @"userName" : self.userNameLabel,
-                                          @"bodyText" : self.bodyTextView};
-        
-        NSDictionary *metricsDictionary = @{@"BodyInsetL" : @30.0f,
-                                @"ProfileInsetL" : @20.0f,
-                                @"FullInsetL" : @50.0f,
-                                @"InsetR" : @15.0f,
-                                @"MainBaseline" : @41.5f,
-                                @"InsetV" : @17.5f,
-                                @"InnerSpacing" : @10.0f};
-        
-        NSArray *constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(21.5)-[pImg(==20)]"
-                                                options:0 metrics:metricsDictionary views:viewsDictionary];
-        [self.contentView addConstraints:constraints];
-        
-        constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[fullName]-(InnerSpacing)-[bodyText]-|"
-                                                                       options:0 metrics:metricsDictionary views:viewsDictionary];
-        [self.contentView addConstraints:constraints];
-        
-        constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(ProfileInsetL)-[pImg(==20)]-(InnerSpacing)-[fullName]-(InnerSpacing)-[userName]"
-                                                              options:0 metrics:metricsDictionary views:viewsDictionary];
-        [self.contentView addConstraints:constraints];
-        constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(BodyInsetL)-[bodyText]-(InsetR)-|"
-                                                              options:0 metrics:metricsDictionary views:viewsDictionary];
-        [self.contentView addConstraints:constraints];
-        
-        
-        // fullNameLabel
-        [self.contentView addConstraint:[NSLayoutConstraint
-                                         constraintWithItem:self.fullNameLabel
-                                         attribute:NSLayoutAttributeBaseline
-                                         relatedBy:NSLayoutRelationEqual
-                                         toItem:self.contentView
-                                         attribute:NSLayoutAttributeTop
-                                         multiplier:1.0f
-                                         constant:kMainBaseline]];
-        
-        // userNameLabel
-        [self.contentView addConstraint:[NSLayoutConstraint
-                                         constraintWithItem:self.userNameLabel
-                                         attribute:NSLayoutAttributeBaseline
-                                         relatedBy:NSLayoutRelationEqual
-                                         toItem:self.contentView
-                                         attribute:NSLayoutAttributeTop
-                                         multiplier:1.0f
-                                         constant:kMainBaseline]];
-        
-        self.didSetupConstraints = YES;
-    }
-    NSLog(@"bodyTextView.frame: %f,%f (via updateConstraints)", self.bodyTextView.frame.size.width, self.bodyTextView.frame.size.height);
-    NSLog(@"contentView.frame: %f,%f (via updateConstraints)", self.contentView.frame.size.width, self.contentView.frame.size.height);
+    constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(BodyInsetL)-[bodyText]-(InsetR)-|" options:0 metrics:metricsDictionary views:viewsDictionary];
+    [self.contentView addConstraints:constraints];
+    
+    
+    // fullNameLabel
+    [self.contentView addConstraint:[NSLayoutConstraint
+                                     constraintWithItem:self.fullNameLabel
+                                     attribute:NSLayoutAttributeBaseline
+                                     relatedBy:NSLayoutRelationEqual
+                                     toItem:self.contentView
+                                     attribute:NSLayoutAttributeTop
+                                     multiplier:1.0f
+                                     constant:kMainBaseline]];
+    
+    // userNameLabel
+    [self.contentView addConstraint:[NSLayoutConstraint
+                                     constraintWithItem:self.userNameLabel
+                                     attribute:NSLayoutAttributeBaseline
+                                     relatedBy:NSLayoutRelationEqual
+                                     toItem:self.contentView
+                                     attribute:NSLayoutAttributeTop
+                                     multiplier:1.0f
+                                     constant:kMainBaseline]];
+    
+    // Profile
+    [self.contentView addConstraint:[NSLayoutConstraint
+                                     constraintWithItem:self.profileImg
+                                     attribute:NSLayoutAttributeBaseline
+                                     relatedBy:NSLayoutRelationEqual
+                                     toItem:self.contentView
+                                     attribute:NSLayoutAttributeTop
+                                     multiplier:1.0f
+                                     constant:kMainBaseline + 2]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint
+                                     constraintWithItem:self.profileImg
+                                     attribute:NSLayoutAttributeHeight
+                                     relatedBy:NSLayoutRelationEqual
+                                     toItem:self.profileImg
+                                     attribute:NSLayoutAttributeWidth
+                                     multiplier:1.0f
+                                     constant:0.0f]];
+    
+    // Body
+//    [self.contentView addConstraint:[NSLayoutConstraint
+//                                     constraintWithItem:self.bodyLabel
+//                                     attribute:NSLayoutAttributeTop
+//                                     relatedBy:NSLayoutRelationEqual
+//                                     toItem:self.profileImg
+//                                     attribute:NSLayoutAttributeBaseline
+//                                     multiplier:1.0f
+//                                     constant:kVerticalBodySpacing]];
+//    
+//    [self.contentView addConstraint:[NSLayoutConstraint
+//                                     constraintWithItem:self.bodyLabel
+//                                     attribute:NSLayoutAttributeBottom
+//                                     relatedBy:NSLayoutRelationEqual
+//                                     toItem:self.contentView
+//                                     attribute:NSLayoutAttributeBottom
+//                                     multiplier:1.0f
+//                                     constant:-kVerticalInset]];
+    
+    self.didSetupConstraints = YES;
 }
 
 
@@ -165,7 +187,7 @@
 {
     self.fullNameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light"
                                               size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize + 6];
-    self.bodyTextView.font = [UIFont fontWithName:@"HelveticaNeue-Light"
+    self.bodyLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light"
                                           size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize];
     self.userNameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light"
                                           size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize - 3];
