@@ -61,7 +61,7 @@
         [self.bodyLabel setNumberOfLines:0];
         [self.bodyLabel setTextAlignment:NSTextAlignmentLeft];
         [self.bodyLabel setTextColor:bodyColor];
-        [self.bodyLabel setBackgroundColor:[UIColor clearColor]];
+        [self.bodyLabel setBackgroundColor:[UIColor redColor]];
         self.bodyLabel.tag = TappedBody;
 
         
@@ -198,10 +198,10 @@
 
 - (void)updateFonts
 {
-//    self.fullNameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light"
-//                                              size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize + 6];
-//    self.bodyLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light"
-//                                          size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize];
+    self.fullNameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light"
+                                              size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize + 6];
+    self.bodyLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light"
+                                          size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize];
     self.userNameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light"
                                           size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize - 3];
 }
