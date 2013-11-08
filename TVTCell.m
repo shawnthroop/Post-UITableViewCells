@@ -55,7 +55,7 @@
         self.bodyLabel = [[UILabel alloc] init];
         [self.bodyLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
         [self.bodyLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
-        [self.bodyLabel setLineBreakMode:NSLineBreakByTruncatingTail];
+        [self.bodyLabel setLineBreakMode:NSLineBreakByWordWrapping];
         [self.bodyLabel setNumberOfLines:0];
         [self.bodyLabel setTextAlignment:NSTextAlignmentLeft];
         [self.bodyLabel setTextColor:bodyColor];
@@ -72,14 +72,14 @@
     return self;
 }
 
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-}
-
 - (void)updateConstraints
 {
     [super updateConstraints];
+    
+    float pHeight = self.fullNameLabel.font.capHeight;
+    float vInset = (1.0 * self.bodyLabel.font.pointSize);
+    float baseline = pHeight + vInset;
+    
     
     
     if (self.didSetupConstraints) return;
@@ -87,22 +87,23 @@
     NSDictionary *viewsDictionary = @{@"pImg" : self.profileImg,
                                       @"fullName" : self.fullNameLabel,
                                       @"userName" : self.userNameLabel,
-                                      @"bodyText" : self.bodyLabel,
-                                      @"contentView" : self.contentView };
-    
+                                      @"bodyText" : self.bodyLabel, };
     NSDictionary *metricsDictionary = @{@"BodyInsetL" : @30.0f,
-                            @"ProfileInsetL" : @20.0f,
-                            @"FullInsetL" : @50.0f,
-                            @"InsetR" : @15.0f,
-                            @"MainBaseline" : @41.5f,
-                            @"InsetV" : @17.5f,
-                            @"InnerSpacing" : @10.0f};
+                                        @"ProfileInsetL" : @20.0f,
+                                        @"FullInsetL" : @50.0f,
+                                        @"InsetR" : @15.0f,
+                                        @"pHeight" : @(pHeight),
+                                        @"MainBaseline" : @(baseline),
+                                        @"InsetV" : @(vInset),
+                                        @"InnerSpacing" : @10.0f};
     
-
-    NSArray *constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[pImg(==20)]-(InnerSpacing)-[bodyText(>=1)]-(InsetV)-|" options:0 metrics:metricsDictionary views:viewsDictionary];
+    NSArray *constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(InsetV)-[pImg]" options:0 metrics:metricsDictionary views:viewsDictionary];
     [self.contentView addConstraints:constraints];
     
-    constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(ProfileInsetL)-[pImg(==20)]-(InnerSpacing)-[fullName]-(InnerSpacing)-[userName]" options:0 metrics:metricsDictionary views:viewsDictionary];
+    constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[bodyText]-(InsetV)-|" options:0 metrics:metricsDictionary views:viewsDictionary];
+    [self.contentView addConstraints:constraints];
+    
+    constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(ProfileInsetL)-[pImg]-(InnerSpacing)-[fullName]-(InnerSpacing)-[userName]" options:0 metrics:metricsDictionary views:viewsDictionary];
     [self.contentView addConstraints:constraints];
     
     
@@ -118,7 +119,7 @@
                                      toItem:self.contentView
                                      attribute:NSLayoutAttributeTop
                                      multiplier:1.0f
-                                     constant:kMainBaseline]];
+                                     constant:baseline]];
     
     // userNameLabel
     [self.contentView addConstraint:[NSLayoutConstraint
@@ -128,7 +129,7 @@
                                      toItem:self.contentView
                                      attribute:NSLayoutAttributeTop
                                      multiplier:1.0f
-                                     constant:kMainBaseline]];
+                                     constant:baseline]];
     
     // Profile
     [self.contentView addConstraint:[NSLayoutConstraint
@@ -138,27 +139,36 @@
                                      toItem:self.contentView
                                      attribute:NSLayoutAttributeTop
                                      multiplier:1.0f
-                                     constant:kMainBaseline + 2]];
+                                     constant:(vInset + pHeight)]];
+    
+    [self.contentView addConstraint:[NSLayoutConstraint
+                                     constraintWithItem:self.profileImg
+                                     attribute:NSLayoutAttributeWidth
+                                     relatedBy:NSLayoutRelationEqual
+                                     toItem:nil
+                                     attribute:NSLayoutAttributeNotAnAttribute
+                                     multiplier:1.0f
+                                     constant:pHeight]];
     
     [self.contentView addConstraint:[NSLayoutConstraint
                                      constraintWithItem:self.profileImg
                                      attribute:NSLayoutAttributeHeight
                                      relatedBy:NSLayoutRelationEqual
-                                     toItem:self.profileImg
-                                     attribute:NSLayoutAttributeWidth
+                                     toItem:nil
+                                     attribute:NSLayoutAttributeNotAnAttribute
                                      multiplier:1.0f
-                                     constant:0.0f]];
+                                     constant:pHeight]];
     
     // Body
-//    [self.contentView addConstraint:[NSLayoutConstraint
-//                                     constraintWithItem:self.bodyLabel
-//                                     attribute:NSLayoutAttributeTop
-//                                     relatedBy:NSLayoutRelationEqual
-//                                     toItem:self.profileImg
-//                                     attribute:NSLayoutAttributeBaseline
-//                                     multiplier:1.0f
-//                                     constant:kVerticalBodySpacing]];
-//    
+    [self.contentView addConstraint:[NSLayoutConstraint
+                                     constraintWithItem:self.bodyLabel
+                                     attribute:NSLayoutAttributeTop
+                                     relatedBy:NSLayoutRelationEqual
+                                     toItem:self.fullNameLabel
+                                     attribute:NSLayoutAttributeBaseline
+                                     multiplier:1.0f
+                                     constant:(vInset / 1.6)]];
+//
 //    [self.contentView addConstraint:[NSLayoutConstraint
 //                                     constraintWithItem:self.bodyLabel
 //                                     attribute:NSLayoutAttributeBottom
