@@ -6,6 +6,11 @@
 //  Copyright (c) 2013 Silent H Design. All rights reserved.
 //
 
+typedef enum {
+    TappedBody,
+    TappedName
+} TappedLocation;
+
 #import <UIKit/UIKit.h>
 
 #define kBodyHorizontalInsetLeft 30.0f

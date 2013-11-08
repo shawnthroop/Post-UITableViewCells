@@ -26,6 +26,7 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
         self.contentView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
         
         // Profile Image for User
@@ -41,6 +42,7 @@
         self.fullNameLabel.textAlignment = NSTextAlignmentLeft;
         self.fullNameLabel.textColor = fullNameColor;
         self.fullNameLabel.backgroundColor = [UIColor clearColor];
+        self.fullNameLabel.tag = TappedName;
         
         // Username
         self.userNameLabel = [[UILabel alloc] init];
@@ -60,7 +62,8 @@
         [self.bodyLabel setTextAlignment:NSTextAlignmentLeft];
         [self.bodyLabel setTextColor:bodyColor];
         [self.bodyLabel setBackgroundColor:[UIColor clearColor]];
-        
+        self.bodyLabel.tag = TappedBody;
+
         
         [self.contentView addSubview:self.profileImg];
         [self.contentView addSubview:self.fullNameLabel];
@@ -202,6 +205,8 @@
     self.userNameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light"
                                           size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize - 3];
 }
+
+
 
 
 @end

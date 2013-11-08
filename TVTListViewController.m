@@ -64,7 +64,6 @@ static NSString *CellIdentifier = @"PostCell";
         self.title = @"Table View Test Controller";
         [self.tableView setSeparatorInset:UIEdgeInsetsZero];
         [self.tableView setSeparatorColor:[UIColor clearColor]];
-
     }
     return self;
 }
@@ -139,6 +138,23 @@ static NSString *CellIdentifier = @"PostCell";
     [cell.profileImg setImage:[UIImage imageNamed:@"profileImg-default.png"]];
     [cell.bodyLabel setText:[dataArray objectAtIndex:indexPath.row]];
     
+    cell.bodyLabel.userInteractionEnabled = YES;
+    cell.fullNameLabel.userInteractionEnabled = YES;
+    
+    for(UIView *view in cell.contentView.subviews) {
+        if(view.tag <= TappedName) {
+            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
+            [tap setNumberOfTapsRequired:1];
+            [view addGestureRecognizer:tap];
+        }
+    }
+    
+    // User interaction
+    cell.bodyLabel.userInteractionEnabled = YES;
+    UIGestureRecognizer *tapGesture = [[UIGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
+    [cell.bodyLabel addGestureRecognizer:tapGesture];
+    
+    
 //    NSMutableAttributedString *bodyText = [[NSMutableAttributedString alloc] initWithAttributedString:[[NSAttributedString alloc] initWithString:[dataArray objectAtIndex:indexPath.row] attributes:<#(NSDictionary *)#>] label.attributedText];
 //    [text addAttribute: NSForegroundColorAttributeName value: [UIColor redColor] range: NSMakeRange(10, 1)];
 //    [label setAttributedText: text];
@@ -178,6 +194,20 @@ static NSString *CellIdentifier = @"PostCell";
 {
     return 200.0f;
 }
+
+
+
+
+#pragma mark - Tap Gesture
+
+- (void)tap:(UIGestureRecognizer *)gr
+{
+    NSLog(@"Tap: %d", gr.view.tag);
+    CGPoint p = [gr locationInView:gr.view];
+    NSLog(@"%f, %f", p.x, p.y);
+}
+
+
 /*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
