@@ -31,6 +31,7 @@
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         self.contentView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
 //        self.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+//        self.autoresizingMask = UIViewAutoresizingFlexibleHeight;
         
         // Profile Image for User
         self.profileImg = [[UIImageView alloc] init];
@@ -71,9 +72,9 @@
         self.bodyTextView = [[UITextView alloc] init];
         self.bodyTextView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.bodyTextView setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-        self.bodyTextView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+//        self.bodyTextView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         self.bodyTextView.backgroundColor = [UIColor orangeColor];
-//        self.bodyTextView.textContainerInset = UIEdgeInsetsMake(-4, -6, -4, -8);
+        self.bodyTextView.textContainerInset = UIEdgeInsetsMake(0, -4, 0, -4);
         self.bodyTextView.editable = NO;
         self.bodyTextView.scrollEnabled = NO;
 
@@ -102,9 +103,9 @@
                                             @"pHeight" : @(pHeight),
                                             @"MainBaseline" : @(baseline),
                                             @"InsetV" : @(vInset),
-                                            @"InnerSpacing" : @10.0f, @"bodyW" : @275.0f};
+                                            @"InnerSpacing" : @10.0f};
         
-        NSArray *constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(InsetV)-[pImg]-[bodyText]-(InsetV)-|" options:0 metrics:metricsDictionary views:viewsDictionary];
+        NSArray *constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(InsetV)-[pImg]-(InnerSpacing)-[bodyText]-(InsetV)-|" options:0 metrics:metricsDictionary views:viewsDictionary];
         [self.contentView addConstraints:constraints];
         
         //    constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[bodyText]-(InsetV)-|" options:0 metrics:metricsDictionary views:viewsDictionary];
@@ -114,7 +115,7 @@
         [self.contentView addConstraints:constraints];
         
         
-        constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:[bodyText(==bodyW)]-(InsetR)-|" options:0 metrics:metricsDictionary views:viewsDictionary];
+        constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(BodyInsetL)-[bodyText]-(InsetR)-|" options:0 metrics:metricsDictionary views:viewsDictionary];
         [self.contentView addConstraints:constraints];
         
         
@@ -182,7 +183,7 @@
                                                                toItem:nil
                                                             attribute:NSLayoutAttributeNotAnAttribute
                                                            multiplier:0.f
-                                                             constant:50.0f];
+                                                             constant:1000.0f];
         [self.contentView addConstraint:bodyHeightConstraint];
     }
     return self;
@@ -191,19 +192,14 @@
 
 - (void)updateConstraints
 {
+    NSLog(@"------ updateConstraints ------");
     [super updateConstraints];
     
+//    CGSize bodySize = self.bodyTextView.contentSize;
+//    NSLog(@"Updating Constraints, body.TextView.contentSize: %@", NSStringFromCGSize(bodySize));
+//    [bodyHeightConstraint setConstant:bodySize.height];
     
-//    float pHeight = self.fullNameLabel.font.capHeight;
-//    float vInset = (1.0 * self.bodyTextView.font.pointSize);
-//    float baseline = pHeight + vInset;
     
-//    self.bodyTextView.frame = self.contentView.bounds;
-    CGSize bodySize = self.bodyTextView.contentSize;
-    
-    [bodyHeightConstraint setConstant:bodySize.height];
-    
-    NSLog(@"bodyTextView Actual Contents: %@", self.bodyTextView.text);
 //
 //    NSLog(@"Bounds - TextView: %@ | ContentView: %@ | Cell: %@ | BodySize: %@", NSStringFromCGSize(self.bodyTextView.bounds.size), NSStringFromCGSize(self.contentView.bounds.size), NSStringFromCGSize(self.bounds.size), NSStringFromCGSize(bodySize));
 //    
@@ -308,20 +304,6 @@
 }
 
 
-- (void)setBounds:(CGRect)bounds
-{
-    [super setBounds:bounds];
-    NSLog(@"----------------------setBoundsCalled -------");
-//    self.bodyTextView.frame = bounds;
-//    CGSize bodySize = self.bodyTextView.contentSize;
-//    
-//    [bodyHeightConstraint setConstant:bodySize.height];
-//    
-//    [self layoutIfNeeded];
-//    
-//    NSLog(@"Bounds - TextView: %@ | ContentView: %@ | Cell: %@", NSStringFromCGRect(self.bodyTextView.bounds), NSStringFromCGRect(self.contentView.bounds), NSStringFromCGRect(self.bounds));
-}
-
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
@@ -337,7 +319,7 @@
     self.fullNameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light"
                                               size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize + 6];
     self.bodyTextView.font = [UIFont fontWithName:@"HelveticaNeue-Light"
-                                          size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize];
+                                             size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize];
     self.userNameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light"
                                           size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize - 3];
 }
@@ -346,14 +328,16 @@
 {
     [super prepareForReuse];
     
-    self.imageView.image = nil;
-    [self.bodyTextView invalidateIntrinsicContentSize];
-    [self setNeedsUpdateConstraints];
+    [self.contentView setNeedsLayout];
+    [self.contentView layoutIfNeeded];
     
-    NSAttributedString *aStr = [[NSAttributedString alloc] initWithString:@""];
-    self.fullNameLabel.attributedText = aStr;
-    self.userNameLabel.attributedText = aStr;
-    self.bodyTextView.attributedText = aStr;
+    self.imageView.image = nil;
+    [self.bodyHeightConstraint setConstant:1000.0f];
+    
+//    NSAttributedString *aStr = [[NSAttributedString alloc] initWithString:@""];
+//    self.fullNameLabel.attributedText = nil;
+//    self.userNameLabel.attributedText = aStr;
+//    self.bodyTextView.attributedText = nil;
 }
 
 @end

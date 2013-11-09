@@ -19,22 +19,14 @@ static NSString *CellIdentifier = @"PostCell";
 
 @implementation TVTListViewController
 {
-    NSTextStorage *textStorage;
-    NSTextContainer *textContainer;
-    NSLayoutManager *layoutManager;
+    UIFont *bodyFontAttributes;
 }
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
     if (self) {
-        
-        layoutManager = [[NSLayoutManager alloc] init];
-        textContainer = [[NSTextContainer alloc] init];
-        textStorage = [[NSTextStorage alloc] init];
-        
-        [layoutManager setTextStorage:textStorage];
-        [layoutManager addTextContainer:textContainer];
+        NSLog(@"initWithStyle");
         
         self.model = [[RJModel alloc] init];
         [self.model populateDataSource];
@@ -49,6 +41,7 @@ static NSString *CellIdentifier = @"PostCell";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    NSLog(@"viewDidLoad");
     
     [[self tableView] registerClass:[TVTCell class] forCellReuseIdentifier:CellIdentifier];
 }
@@ -59,6 +52,7 @@ static NSString *CellIdentifier = @"PostCell";
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    NSLog(@"viewDidAppear");
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(contentSizeCategoryChanged:)
@@ -70,6 +64,7 @@ static NSString *CellIdentifier = @"PostCell";
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
+    NSLog(@"viewDidDisappear");
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIContentSizeCategoryDidChangeNotification
@@ -94,39 +89,66 @@ static NSString *CellIdentifier = @"PostCell";
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    NSLog(@"numberOfSectionsInTableView");
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.model.dataSource.count;
+    NSLog(@"tableView:numberOfRowsInSection:");
+//    return self.model.dataSource.count;
+
+    return 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    NSLog(@"------ tableView:cellForRowAtIndexPath ------");
     TVTCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     [cell updateFonts];
+    bodyFontAttributes = [UIFont fontWithName:@"HelveticaNeue-Light" size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize];
     
+    // Change Profile Image
     [cell.profileImg setImage:[UIImage imageNamed:@"profileImg-default.png"]];
     
     // Populate labels
     NSDictionary *dataSourceItem = [self.model.dataSource objectAtIndex:indexPath.row];
-    
     cell.fullNameLabel.attributedText =  [dataSourceItem valueForKey:@"name"];
     cell.userNameLabel.attributedText =  [dataSourceItem valueForKey:@"user"];
-    cell.bodyTextView.attributedText = [dataSourceItem valueForKey:@"body"];
     
-    CGFloat height = [cell.bodyTextView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
-    [[cell bodyHeightConstraint] setConstant:height];
+    // Populate set style and text of textview
+    NSMutableAttributedString *bodyText = [[dataSourceItem valueForKey:@"body"] mutableCopy];
+    NSRange bodyStringLength = NSMakeRange(0, bodyText.length);
+    [bodyText addAttribute:NSFontAttributeName value:bodyFontAttributes range:bodyStringLength];
+    cell.bodyTextView.attributedText = bodyText;
     
+    NSLog(@"\n ---- cell.contentView | frame: %@ bounds: %@ \n\n\n\n", NSStringFromCGRect(cell.contentView.frame), NSStringFromCGSize(cell.contentView.bounds.size));
+    
+    [cell.bodyTextView setNeedsLayout];
+    [cell.bodyTextView layoutIfNeeded];
+
+    NSLog(@"\n---- tableView:cellForRowAtIndexPath --00-- cell.bodyTextView | frame: %@ bounds: %@ contentSize: %@\n\n", NSStringFromCGRect(cell.bodyTextView.frame), NSStringFromCGSize(cell.bodyTextView.bounds.size), NSStringFromCGSize(cell.bodyTextView.contentSize));
+
+    
+//    NSLog(@"-- cell.bodyTextView -- 00 -- | frame: %@ bounds: %@ contentSize: %@", NSStringFromCGRect(cell.bodyTextView.frame), NSStringFromCGSize(cell.bodyTextView.bounds.size), NSStringFromCGSize(cell.bodyTextView.contentSize));
+//    
+//    [cell.contentView setNeedsLayout];
+//    [cell.contentView layoutIfNeeded];
+//    
+//    [cell setNeedsUpdateConstraints];
+//    
+//    CGFloat height = [cell.bodyTextView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+//    [[cell bodyHeightConstraint] setConstant:height];
+//    NSLog(@"bodyHeightConstraint constant set to: %f", height);
+//    
+//    NSLog(@"-- cell.bodyTextView -- 01 -- | frame: %@ bounds: %@ contentSize: %@", NSStringFromCGRect(cell.bodyTextView.frame), NSStringFromCGSize(cell.bodyTextView.bounds.size), NSStringFromCGSize(cell.bodyTextView.contentSize));
 //    CGSize size = [cell.bodyTextView sizeThatFits:CGSizeMake(275, FLT_MAX)];
 //    NSLog(@"%@: %@", cell.userNameLabel.text, NSStringFromCGSize(size));
 //    [cell.bodyTextView setFrame:CGRectMake(0, 0, size.width, size.height)];
 //    [cell.bodyTextView sizeToFit];
-    
-    //    NSLog(@"After  contentSize: %f, %f", cell.bodyTextView.frame.size.width, cell.bodyTextView.frame.size.height);
+//    
+//    NSLog(@"After  contentSize: %f, %f", cell.bodyTextView.frame.size.width, cell.bodyTextView.frame.size.height);
 //    
 //    CGSize size = [cell.bodyTextView sizeThatFits:CGSizeMake(cell.bodyTextView.bounds.size.width, FLT_MAX)];
 //    [cell.bodyTextView setFrame:CGRectMake(0, 0, size.width, size.height)];
@@ -145,18 +167,30 @@ static NSString *CellIdentifier = @"PostCell";
 //        }
 //    }
 //
-    
+//    
 //    NSLog(@"%@ \nCell Frame: %@\nTextView Frame: %@\nTextView ContentSize: %@",cell.fullNameLabel.text, NSStringFromCGRect(cell.frame), NSStringFromCGRect(cell.bodyTextView.frame), NSStringFromCGSize(cell.bodyTextView.contentSize));
     // Make sure the constraints have been added to this cell, since it may have just been created from scratch
-    [cell setNeedsUpdateConstraints];
+//    [cell setNeedsUpdateConstraints];
+//    NSLog(@"setNeedsUpdateConstraints");
+//    
+//    NSLog(@"-- cell.bodyTextView -- 02 -- | frame: %@ bounds: %@ contentSize: %@", NSStringFromCGRect(cell.bodyTextView.frame), NSStringFromCGSize(cell.bodyTextView.bounds.size), NSStringFromCGSize(cell.bodyTextView.contentSize));
+ 
     return cell;
 }
 
+
+
+
+
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSLog(@"------ tableView:heightForRowAtIndexPath ------");
     TVTCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     [cell updateFonts];
+    
+    bodyFontAttributes = [UIFont fontWithName:@"HelveticaNeue-Light" size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize];
     
     [cell.profileImg setImage:[UIImage imageNamed:@"profileImg-default.png"]];
     
@@ -164,35 +198,59 @@ static NSString *CellIdentifier = @"PostCell";
     NSDictionary *dataSourceItem = [self.model.dataSource objectAtIndex:indexPath.row];
     cell.fullNameLabel.attributedText =  [dataSourceItem valueForKey:@"name"];
     cell.userNameLabel.attributedText =  [dataSourceItem valueForKey:@"user"];
-    cell.bodyTextView.attributedText = [dataSourceItem valueForKey:@"body"];
     
-    NSLog(@"Body Text in heightForRow: %@", cell.bodyTextView.text);
-    NSLog(@"TextView bounds: %@",NSStringFromCGRect(cell.bodyTextView.bounds));
+    NSMutableAttributedString *bodyText = [[dataSourceItem valueForKey:@"body"] mutableCopy];
+//    NSRange bodyStringLength = NSMakeRange(0, bodyText.length);
+    [bodyText addAttribute:NSFontAttributeName value:bodyFontAttributes range:NSMakeRange(0, bodyText.length)];
+    cell.bodyTextView.attributedText = bodyText;
     
-//    CGSize size = [cell.bodyTextView sizeThatFits:CGSizeMake(275, FLT_MAX)];
-////    NSLog(@"%@: %@", cell.userNameLabel.text, NSStringFromCGSize(size));
-//    [cell.bodyTextView setFrame:CGRectMake(0, 0, size.width, size.height)];
+    NSLog(@"---- tableView:heightForRowAtIndexPath --00-- cell.bodyTextView | frame: %@ bounds: %@ contentSize: %@\n\n", NSStringFromCGRect(cell.bodyTextView.frame), NSStringFromCGSize(cell.bodyTextView.bounds.size), NSStringFromCGSize(cell.bodyTextView.contentSize));
     
-    //    cell.bodyLabel.preferredMaxLayoutWidth = tableView.bounds.size.width - (kBodyHorizontalInsetLeft + kInsetRight);
     
-    [cell setNeedsUpdateConstraints];
-    [cell updateConstraintsIfNeeded];
+    
     [cell.contentView setNeedsLayout];
     [cell.contentView layoutIfNeeded];
     
-    CGFloat height = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
-//    NSLog(@"bodyText: %@",NSStringFromCGSize([cell.bodyTextView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize]));
-//    NSLog(@"contentView height: %f", height);
+    NSLog(@"\n---- tableView:heightForRowAtIndexPath --01-- cell.bodyTextView | frame: %@ bounds: %@ contentSize: %@\n\n", NSStringFromCGRect(cell.bodyTextView.frame), NSStringFromCGSize(cell.bodyTextView.bounds.size), NSStringFromCGSize(cell.bodyTextView.contentSize));
     
-//    NSLog(@"bodyContentHeight: %f", height);
-
+    
+    
+    NSLog(@"\nbodyTextView Actual Contents: %@\n\n", cell.bodyTextView.text);
+    
+    
+    
+    
+    CGSize size = [cell.bodyTextView sizeThatFits:CGSizeMake(cell.bodyTextView.bounds.size.width, FLT_MAX)];
+    [cell.bodyHeightConstraint setConstant:size.height];
+    
+    NSLog(@"\n---- cell.bodyTextView sizeThatFits: %@\n\n", NSStringFromCGSize(size));
+    
+    
+    
+//    [cell setNeedsUpdateConstraints];
+//    [cell updateConstraintsIfNeeded];
+    [cell.contentView setNeedsLayout];
+    [cell.contentView layoutIfNeeded];
+    
+    NSLog(@"\n---- tableView:heightForRowAtIndexPath --02-- cell.bodyTextView | frame: %@ bounds: %@ contentSize: %@\n\n", NSStringFromCGRect(cell.bodyTextView.frame), NSStringFromCGSize(cell.bodyTextView.bounds.size), NSStringFromCGSize(cell.bodyTextView.contentSize));
+    
+    
+    
+    
+    CGFloat height = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+    NSLog(@"contentView size: %@ (height: %f)",NSStringFromCGSize([cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize]), height);
+    
     return height;
-    return 250.0f;
 }
+
+
+
+
 
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSLog(@"tableView:estimatedHeightForRowAtIndexPath:");
     return 200.0f;
 }
 
@@ -248,8 +306,6 @@ static NSString *CellIdentifier = @"PostCell";
     NSString *oneCharacter = [mappingTextView textInRange:rangeOfCharacter];
     NSLog(@"Character: %@, Position: %@", oneCharacter, rangeOfCharacter);
 }
-
-
 
 
 /*

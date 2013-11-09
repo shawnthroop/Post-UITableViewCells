@@ -73,10 +73,9 @@
 
     // Array to string. Adding '!!!' to end of string to ensure all text is visible.
     //
-    NSString *sSimple = [NSString stringWithFormat:@"%@!!!", [lorumIpsumRandom componentsJoinedByString:@" "]];
+    NSString *text = [NSString stringWithFormat:@"%@!!!", [lorumIpsumRandom componentsJoinedByString:@" "]];
     
-    NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:sSimple attributes:nil];
-    return attrString;
+    return [[NSMutableAttributedString alloc] initWithString:text];
 }
 
 
