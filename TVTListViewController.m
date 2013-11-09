@@ -18,55 +18,24 @@ static NSString *CellIdentifier = @"PostCell";
 @end
 
 @implementation TVTListViewController
+{
+    NSTextStorage *textStorage;
+    NSTextContainer *textContainer;
+    NSLayoutManager *layoutManager;
+}
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
     if (self) {
         
-//        UIFont *nameFont= [UIFont fontWithName:@"HelveticaNeue-Light" size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize + 6];
-//        UIFont *userFont= [UIFont fontWithName:@"HelveticaNeue-Light" size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize - 3];
-//        UIFont *bodyFont = [UIFont fontWithName:@"HelveticaNeue-Light" size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize];
-//        
-//        NSAttributedString *attrStringBody = [[NSAttributedString alloc] initWithString:@"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent non quam ac massa viverra semper. Maecenas mattis justo ac augue volutpat congue. Maecenas laoreet, nulla eu faucibus" attributes:@{NSFontAttributeName: bodyFont}];
-//        NSAttributedString *attrStringName = [[NSAttributedString alloc] initWithString:@"Random User" attributes:@{NSFontAttributeName: nameFont}];
-//        NSAttributedString *attrStringUser = [[NSAttributedString alloc] initWithString:@"username" attributes:@{NSFontAttributeName: userFont}];
+        layoutManager = [[NSLayoutManager alloc] init];
+        textContainer = [[NSTextContainer alloc] init];
+        textStorage = [[NSTextStorage alloc] init];
         
-//        dataArray = [NSArray arrayWithObjects:
-//                     attrStringBody,
-//                     @"Now it’s Oscar the Grouch and some of his lady friends singing “Grouch Girls Don’t Wanna Have Fun.” This station is beyond great.",
-//                     @"Something tells me this won’t be the last Ballmer public self humiliation we’ll be seeing.",
-//                     @"Time-shifted TV watching has turned us into feral knowledge-repulsed animals who would shiv our own grandmothers.",
-//                     @"Like savvy companies, @marcoarment wants to own every part of the supply chain to ensure the best @atpfm experience. Next up: a phone and OS",
-//                     @"USAir’s flight attendants are using the loudspeaker to advertise a “special offer” to sign up for their credit card.",
-//                     @"anytime you want to get @mattsinger to smile from here on out, just go up to him & say 'Hello, Mr. Ninja' in a British accent",
-//                     @"Uptime Calendar for iPhone - http://loopu.in/18PZnj2",
-//                     @"Velocity for iPhone - http://bpxl.me/14AmGKk",
-//                     @"Just ordered my shiny new 15-inch MacBook Pro with Retina Display. So excited! Can't wait for daddy to come back from the US!",
-//                     nil];
-//        nameArray = [NSArray arrayWithObjects:
-//                     attrStringName,
-//                     @"Jesse James Herlitz",
-//                     @"Mike Monteiro",
-//                     @"David Deller",
-//                     @"Marco Arment",
-//                     @"ErikDavis",
-//                     @"The Loop",
-//                     @"Beautiful Pixels",
-//                     @"Lele Buonerba",
-//                     nil];
-//        userNameArray = [NSArray arrayWithObjects:
-//                         attrStringUser,
-//                         @"@strike",
-//                         @"@Mike_FTW",
-//                         @"@dmdeller",
-//                         @"@marcoarment",
-//                         @"@ErikDavis",
-//                         @"@theloop",
-//                         @"@beautifulpixels",
-//                         @"@lele",
-//                         nil];
-//        
+        [layoutManager setTextStorage:textStorage];
+        [layoutManager addTextContainer:textContainer];
+        
         self.model = [[RJModel alloc] init];
         [self.model populateDataSource];
         
@@ -96,7 +65,6 @@ static NSString *CellIdentifier = @"PostCell";
                                                  name:UIContentSizeCategoryDidChangeNotification
                                                object:nil];
 }
-
 
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -149,10 +117,7 @@ static NSString *CellIdentifier = @"PostCell";
     cell.fullNameLabel.attributedText =  [dataSourceItem valueForKey:@"name"];
     cell.userNameLabel.attributedText =  [dataSourceItem valueForKey:@"user"];
     cell.bodyLabel.attributedText = [dataSourceItem valueForKey:@"body"];
-    
-//    NSLog(@"data: %@ | %@", [dataSourceItem valueForKey:@"title"], [dataSourceItem valueForKey:@"body"]);
-    
-    
+        
     cell.bodyLabel.userInteractionEnabled = YES;
     cell.fullNameLabel.userInteractionEnabled = YES;
     
@@ -167,7 +132,6 @@ static NSString *CellIdentifier = @"PostCell";
     
     // Make sure the constraints have been added to this cell, since it may have just been created from scratch
     [cell setNeedsUpdateConstraints];
-    
     return cell;
 }
 
@@ -210,34 +174,32 @@ static NSString *CellIdentifier = @"PostCell";
 
 - (void)tap:(UIGestureRecognizer *)gr
 {
-    NSLog(@"Tap: %d", gr.view.tag);
+//    NSLog(@"Tap: %d", gr.view.tag);
     CGPoint p = [gr locationInView:gr.view];
 //    NSLog(@"%f, %f", p.x, p.y);
     
     UILabel *tappedLabel = (UILabel *)gr.view;
     
+    UITextView *mappingTextView = [[UITextView alloc] initWithFrame:tappedLabel.frame];
+    mappingTextView.attributedText = tappedLabel.attributedText;
+    mappingTextView.font = tappedLabel.font;
+    mappingTextView.textContainerInset = UIEdgeInsetsMake(0, -8, 0, -8);
     
-    NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
-    NSTextContainer *textContainer = [[NSTextContainer alloc] initWithSize:gr.view.bounds.size];
+    NSLog(@"label.width:%f textView.width %f", tappedLabel.frame.size.width, mappingTextView.frame.size.width);
+    UITextPosition *tapPosition = [mappingTextView closestPositionToPoint:p];
+    if (tapPosition == nil) {
+        NSLog(@"Tap Position fail");
+        return;
+    }
     
-//    NSLog(@"label size: %f, %f", gr.view.bounds.size.width, gr.view.bounds.size.height);
-//    NSLog(@"textContainer size: %f, %f", textContainer.size.width, textContainer.size.height);
+    UITextPosition *textPosition = tapPosition;
     
-    NSTextStorage *textStorage = [[NSTextStorage alloc] initWithAttributedString:tappedLabel.attributedText];
-    
-//    NSLog(@"Attributed String: %@", tappedLabel.attributedText);
-    
-    [layoutManager setTextStorage:textStorage];
-    [layoutManager addTextContainer:textContainer];
-    
-    NSUInteger charIndex = [layoutManager characterIndexForPoint:p inTextContainer:textContainer fractionOfDistanceBetweenInsertionPoints:NULL];
-//    NSLog(@"%ul", charIndex);
-    
-    unichar uChar = [textStorage.string characterAtIndex:charIndex];
-    NSString *s = [NSString stringWithCharacters:&uChar length:1];
-    NSLog(@"Character Index: %d, Character: %@", charIndex, s);
-
+    UITextRange *rangeOfCharacter = [mappingTextView.tokenizer rangeEnclosingPosition:textPosition withGranularity:UITextGranularityCharacter inDirection:UITextWritingDirectionNatural];
+    NSString *oneCharacter = [mappingTextView textInRange:rangeOfCharacter];
+    NSLog(@"Character: %@, Position: %@", oneCharacter, rangeOfCharacter);
 }
+
+
 
 
 /*

@@ -69,11 +69,13 @@
         [self.contentView addSubview:self.fullNameLabel];
         [self.contentView addSubview:self.userNameLabel];
         [self.contentView addSubview:self.bodyLabel];
+        [self sizeToFit];
         
         [self updateFonts];
     }
     return self;
 }
+
 
 - (void)updateConstraints
 {
@@ -206,7 +208,16 @@
                                           size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize - 3];
 }
 
-
-
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+    
+    self.imageView.image = nil;
+    
+    NSAttributedString *aStr = [[NSAttributedString alloc] initWithString:@""];
+    self.fullNameLabel.attributedText = aStr;
+    self.userNameLabel.attributedText = aStr;
+    self.bodyLabel.attributedText = aStr;
+}
 
 @end
