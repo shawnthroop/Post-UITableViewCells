@@ -29,9 +29,7 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        self.contentView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-//        self.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-//        self.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+        self.contentView.autoresizingMask = UIViewAutoresizingFlexibleHeight & UIViewAutoresizingFlexibleWidth;
         
         // Profile Image for User
         self.profileImg = [[UIImageView alloc] init];
@@ -45,35 +43,21 @@
         self.fullNameLabel.numberOfLines = 1;
         self.fullNameLabel.textAlignment = NSTextAlignmentLeft;
         self.fullNameLabel.textColor = fullNameColor;
-        self.fullNameLabel.backgroundColor = [UIColor clearColor];
-        self.fullNameLabel.tag = TappedName;
+        self.fullNameLabel.tag = kTapped;
         
         // Username
         self.userNameLabel = [[UILabel alloc] init];
         self.userNameLabel.translatesAutoresizingMaskIntoConstraints = NO;
-        [self.userNameLabel setLineBreakMode:NSLineBreakByTruncatingTail];
-        [self.userNameLabel setNumberOfLines:1];
-        [self.userNameLabel setTextAlignment:NSTextAlignmentLeft];
-        [self.userNameLabel setTextColor:userNameColor];
-        [self.userNameLabel setBackgroundColor:[UIColor clearColor]];
+        self.userNameLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+        self.userNameLabel.numberOfLines = 1;
+        self.userNameLabel.textAlignment = NSTextAlignmentLeft;
+        self.userNameLabel.textColor = userNameColor;
         
         // Post Body
-//        self.bodyLabel = [[UILabel alloc] init];
-//        [self.bodyLabel setTranslatesAutoresizingMaskIntoConstraints:NO];
-//        [self.bodyLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisVertical];
-//        [self.bodyLabel setLineBreakMode:NSLineBreakByWordWrapping];
-//        [self.bodyLabel setNumberOfLines:0];
-//        [self.bodyLabel setTextAlignment:NSTextAlignmentLeft];
-//        [self.bodyLabel setTextColor:bodyColor];
-//        [self.bodyLabel setBackgroundColor:[UIColor redColor]];
-//        self.bodyLabel.tag = TappedBody;
-        
-        // Post Body TextView
         self.bodyTextView = [[UITextView alloc] init];
         self.bodyTextView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.bodyTextView setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-//        self.bodyTextView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        self.bodyTextView.backgroundColor = [UIColor orangeColor];
+        self.bodyTextView.autoresizingMask = UIViewAutoresizingFlexibleHeight & UIViewAutoresizingFlexibleWidth;
         self.bodyTextView.textContainerInset = UIEdgeInsetsMake(0, -4, 0, -4);
         self.bodyTextView.editable = NO;
         self.bodyTextView.scrollEnabled = NO;
@@ -82,72 +66,73 @@
         [self.contentView addSubview:self.profileImg];
         [self.contentView addSubview:self.fullNameLabel];
         [self.contentView addSubview:self.userNameLabel];
-//        [self.contentView addSubview:self.bodyLabel];
         [self.contentView addSubview:self.bodyTextView];
         
+        
+        
+        // Debugging Colours
+//        self.contentView.backgroundColor = [UIColor greenColor];
+//        self.bodyTextView.backgroundColor = [UIColor orangeColor];
+//        self.fullNameLabel.backgroundColor = [UIColor blueColor];
+//        self.userNameLabel.backgroundColor = [UIColor yellowColor];
+        
+        self.contentView.backgroundColor = [UIColor clearColor];
+        self.bodyTextView.backgroundColor = [UIColor clearColor];
+        self.fullNameLabel.backgroundColor = [UIColor clearColor];
+        self.userNameLabel.backgroundColor = [UIColor clearColor];
+        
+        
+        
+        
         [self updateFonts];
-        
         float pHeight = self.fullNameLabel.font.capHeight;
-        float vInset = (1.0 * self.bodyTextView.font.pointSize);
-        float baseline = pHeight + vInset;
-
+       
         
-        NSDictionary *viewsDictionary = @{@"pImg" : self.profileImg,
+        NSDictionary *viewsDictionary = @{@"profileImg" : self.profileImg,
                                           @"fullName" : self.fullNameLabel,
                                           @"userName" : self.userNameLabel,
                                           @"bodyText" : self.bodyTextView, };
-        NSDictionary *metricsDictionary = @{@"BodyInsetL" : @30.0f,
-                                            @"ProfileInsetL" : @20.0f,
-                                            @"FullInsetL" : @50.0f,
-                                            @"InsetR" : @15.0f,
-                                            @"pHeight" : @(pHeight),
-                                            @"MainBaseline" : @(baseline),
-                                            @"InsetV" : @(vInset),
-                                            @"InnerSpacing" : @10.0f};
+        NSDictionary *metricsDictionary = @{@"PadLeftBody" : @30.0f,
+                                            @"PadLeftProfile" : @20.0f,
+                                            @"PadRight" : @15.0f,
+                                            @"PadInner" : @9.0f};
         
-        NSArray *constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(InsetV)-[pImg]-(InnerSpacing)-[bodyText]-(InsetV)-|" options:0 metrics:metricsDictionary views:viewsDictionary];
-        [self.contentView addConstraints:constraints];
         
+        
+        NSArray *verticalConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[fullName]-[bodyText]-|" options:0 metrics:metricsDictionary views:viewsDictionary];
+        [self.contentView addConstraints:verticalConstraints];
+        
+
         //    constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[bodyText]-(InsetV)-|" options:0 metrics:metricsDictionary views:viewsDictionary];
         //    [self.contentView addConstraints:constraints];
         
-        constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(ProfileInsetL)-[pImg]-(InnerSpacing)-[fullName]-(InnerSpacing)-[userName]" options:0 metrics:metricsDictionary views:viewsDictionary];
-        [self.contentView addConstraints:constraints];
+        // Constraints for top elements (profileimg, fullNameLabel, userNameLabel)
+        NSArray *topConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(PadLeftProfile)-[profileImg]-(PadInner)-[fullName]-(PadInner)-[userName]-(>=PadRight)-|" options:0 metrics:metricsDictionary views:viewsDictionary];
+        [self.contentView addConstraints:topConstraints];
+
+        // Horizontal Constraint for bodyTextView
+        NSArray *horizontalConstraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(PadLeftBody)-[bodyText]-(PadRight)-|" options:0 metrics:metricsDictionary views:viewsDictionary];
+        [self.contentView addConstraints:horizontalConstraints];
         
-        
-        constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(BodyInsetL)-[bodyText]-(InsetR)-|" options:0 metrics:metricsDictionary views:viewsDictionary];
-        [self.contentView addConstraints:constraints];
-        
-        
-        // fullNameLabel
-        [self.contentView addConstraint:[NSLayoutConstraint
-                                         constraintWithItem:self.fullNameLabel
-                                         attribute:NSLayoutAttributeBaseline
-                                         relatedBy:NSLayoutRelationEqual
-                                         toItem:self.contentView
-                                         attribute:NSLayoutAttributeTop
-                                         multiplier:1.0f
-                                         constant:baseline]];
-        
-        // userNameLabel
+//        // userNameLabel
         [self.contentView addConstraint:[NSLayoutConstraint
                                          constraintWithItem:self.userNameLabel
                                          attribute:NSLayoutAttributeBaseline
                                          relatedBy:NSLayoutRelationEqual
-                                         toItem:self.contentView
-                                         attribute:NSLayoutAttributeTop
+                                         toItem:self.fullNameLabel
+                                         attribute:NSLayoutAttributeBaseline
                                          multiplier:1.0f
-                                         constant:baseline]];
-        
+                                         constant:-1.0]];
+
         // Profile
         [self.contentView addConstraint:[NSLayoutConstraint
                                          constraintWithItem:self.profileImg
                                          attribute:NSLayoutAttributeBaseline
                                          relatedBy:NSLayoutRelationEqual
-                                         toItem:self.contentView
-                                         attribute:NSLayoutAttributeTop
+                                         toItem:self.fullNameLabel
+                                         attribute:NSLayoutAttributeBaseline
                                          multiplier:1.0f
-                                         constant:(vInset + pHeight)]];
+                                         constant:1.0f]];
         
         [self.contentView addConstraint:[NSLayoutConstraint
                                          constraintWithItem:self.profileImg
@@ -166,6 +151,19 @@
                                          attribute:NSLayoutAttributeNotAnAttribute
                                          multiplier:1.0f
                                          constant:pHeight]];
+
+        
+        
+//
+//
+//        [self.contentView addConstraint:[NSLayoutConstraint
+//                                         constraintWithItem:self.profileImg
+//                                         attribute:NSLayoutAttributeHeight
+//                                         relatedBy:NSLayoutRelationEqual
+//                                         toItem:nil
+//                                         attribute:NSLayoutAttributeNotAnAttribute
+//                                         multiplier:1.0f
+//                                         constant:pHeight]];
         
         // Body
         //    [self.contentView addConstraint:[NSLayoutConstraint

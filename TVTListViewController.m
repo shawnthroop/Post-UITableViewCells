@@ -96,9 +96,9 @@ static NSString *CellIdentifier = @"PostCell";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSLog(@"tableView:numberOfRowsInSection:");
-//    return self.model.dataSource.count;
+    return self.model.dataSource.count;
 
-    return 1;
+//    return 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -127,54 +127,15 @@ static NSString *CellIdentifier = @"PostCell";
     
     [cell.bodyTextView setNeedsLayout];
     [cell.bodyTextView layoutIfNeeded];
+    [cell.bodyTextView setNeedsUpdateConstraints];
+    [cell.bodyTextView updateConstraintsIfNeeded];
 
-    NSLog(@"\n---- tableView:cellForRowAtIndexPath --00-- cell.bodyTextView | frame: %@ bounds: %@ contentSize: %@\n\n", NSStringFromCGRect(cell.bodyTextView.frame), NSStringFromCGSize(cell.bodyTextView.bounds.size), NSStringFromCGSize(cell.bodyTextView.contentSize));
-
+    CGSize size = [cell.bodyTextView sizeThatFits:CGSizeMake(cell.bodyTextView.bounds.size.width, FLT_MAX)];
+    [cell.bodyHeightConstraint setConstant:size.height];
     
-//    NSLog(@"-- cell.bodyTextView -- 00 -- | frame: %@ bounds: %@ contentSize: %@", NSStringFromCGRect(cell.bodyTextView.frame), NSStringFromCGSize(cell.bodyTextView.bounds.size), NSStringFromCGSize(cell.bodyTextView.contentSize));
-//    
-//    [cell.contentView setNeedsLayout];
-//    [cell.contentView layoutIfNeeded];
-//    
-//    [cell setNeedsUpdateConstraints];
-//    
-//    CGFloat height = [cell.bodyTextView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
-//    [[cell bodyHeightConstraint] setConstant:height];
-//    NSLog(@"bodyHeightConstraint constant set to: %f", height);
-//    
-//    NSLog(@"-- cell.bodyTextView -- 01 -- | frame: %@ bounds: %@ contentSize: %@", NSStringFromCGRect(cell.bodyTextView.frame), NSStringFromCGSize(cell.bodyTextView.bounds.size), NSStringFromCGSize(cell.bodyTextView.contentSize));
-//    CGSize size = [cell.bodyTextView sizeThatFits:CGSizeMake(275, FLT_MAX)];
-//    NSLog(@"%@: %@", cell.userNameLabel.text, NSStringFromCGSize(size));
-//    [cell.bodyTextView setFrame:CGRectMake(0, 0, size.width, size.height)];
-//    [cell.bodyTextView sizeToFit];
-//    
-//    NSLog(@"After  contentSize: %f, %f", cell.bodyTextView.frame.size.width, cell.bodyTextView.frame.size.height);
-//    
-//    CGSize size = [cell.bodyTextView sizeThatFits:CGSizeMake(cell.bodyTextView.bounds.size.width, FLT_MAX)];
-//    [cell.bodyTextView setFrame:CGRectMake(0, 0, size.width, size.height)];
-//    
-//    NSLog(@"After  contentSize: %f, %f", cell.bodyTextView.contentSize.height, cell.bodyTextView.contentSize.width);
-//    
-////    cell.bodyLabel.userInteractionEnabled = YES;
-//    cell.fullNameLabel.userInteractionEnabled = YES;
-//    
-//    for(UIView *view in cell.contentView.subviews) {
-//        if(view.tag <= TappedName) {
-//            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
-//            tap.view.tag = indexPath.row;
-//            [tap setNumberOfTapsRequired:1];
-//            [view addGestureRecognizer:tap];
-//        }
-//    }
-//
-//    
-//    NSLog(@"%@ \nCell Frame: %@\nTextView Frame: %@\nTextView ContentSize: %@",cell.fullNameLabel.text, NSStringFromCGRect(cell.frame), NSStringFromCGRect(cell.bodyTextView.frame), NSStringFromCGSize(cell.bodyTextView.contentSize));
-    // Make sure the constraints have been added to this cell, since it may have just been created from scratch
-//    [cell setNeedsUpdateConstraints];
-//    NSLog(@"setNeedsUpdateConstraints");
-//    
-//    NSLog(@"-- cell.bodyTextView -- 02 -- | frame: %@ bounds: %@ contentSize: %@", NSStringFromCGRect(cell.bodyTextView.frame), NSStringFromCGSize(cell.bodyTextView.bounds.size), NSStringFromCGSize(cell.bodyTextView.contentSize));
- 
+    [cell.contentView setNeedsLayout];
+    [cell.contentView layoutIfNeeded];
+
     return cell;
 }
 
