@@ -116,20 +116,37 @@ static NSString *CellIdentifier = @"PostCell";
     
     cell.fullNameLabel.attributedText =  [dataSourceItem valueForKey:@"name"];
     cell.userNameLabel.attributedText =  [dataSourceItem valueForKey:@"user"];
-    cell.bodyLabel.attributedText = [dataSourceItem valueForKey:@"body"];
-        
-    cell.bodyLabel.userInteractionEnabled = YES;
-    cell.fullNameLabel.userInteractionEnabled = YES;
+    cell.bodyTextView.attributedText = [dataSourceItem valueForKey:@"body"];
     
-    for(UIView *view in cell.contentView.subviews) {
-        if(view.tag <= TappedName) {
-            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
-            tap.view.tag = indexPath.row;
-            [tap setNumberOfTapsRequired:1];
-            [view addGestureRecognizer:tap];
-        }
-    }
+    CGFloat height = [cell.bodyTextView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+    [[cell bodyHeightConstraint] setConstant:height];
     
+//    CGSize size = [cell.bodyTextView sizeThatFits:CGSizeMake(275, FLT_MAX)];
+//    NSLog(@"%@: %@", cell.userNameLabel.text, NSStringFromCGSize(size));
+//    [cell.bodyTextView setFrame:CGRectMake(0, 0, size.width, size.height)];
+//    [cell.bodyTextView sizeToFit];
+    
+    //    NSLog(@"After  contentSize: %f, %f", cell.bodyTextView.frame.size.width, cell.bodyTextView.frame.size.height);
+//    
+//    CGSize size = [cell.bodyTextView sizeThatFits:CGSizeMake(cell.bodyTextView.bounds.size.width, FLT_MAX)];
+//    [cell.bodyTextView setFrame:CGRectMake(0, 0, size.width, size.height)];
+//    
+//    NSLog(@"After  contentSize: %f, %f", cell.bodyTextView.contentSize.height, cell.bodyTextView.contentSize.width);
+//    
+////    cell.bodyLabel.userInteractionEnabled = YES;
+//    cell.fullNameLabel.userInteractionEnabled = YES;
+//    
+//    for(UIView *view in cell.contentView.subviews) {
+//        if(view.tag <= TappedName) {
+//            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
+//            tap.view.tag = indexPath.row;
+//            [tap setNumberOfTapsRequired:1];
+//            [view addGestureRecognizer:tap];
+//        }
+//    }
+//
+    
+//    NSLog(@"%@ \nCell Frame: %@\nTextView Frame: %@\nTextView ContentSize: %@",cell.fullNameLabel.text, NSStringFromCGRect(cell.frame), NSStringFromCGRect(cell.bodyTextView.frame), NSStringFromCGSize(cell.bodyTextView.contentSize));
     // Make sure the constraints have been added to this cell, since it may have just been created from scratch
     [cell setNeedsUpdateConstraints];
     return cell;
@@ -147,9 +164,16 @@ static NSString *CellIdentifier = @"PostCell";
     NSDictionary *dataSourceItem = [self.model.dataSource objectAtIndex:indexPath.row];
     cell.fullNameLabel.attributedText =  [dataSourceItem valueForKey:@"name"];
     cell.userNameLabel.attributedText =  [dataSourceItem valueForKey:@"user"];
-    cell.bodyLabel.attributedText = [dataSourceItem valueForKey:@"body"];
+    cell.bodyTextView.attributedText = [dataSourceItem valueForKey:@"body"];
     
-    cell.bodyLabel.preferredMaxLayoutWidth = tableView.bounds.size.width - (kBodyHorizontalInsetLeft + kInsetRight);
+    NSLog(@"Body Text in heightForRow: %@", cell.bodyTextView.text);
+    NSLog(@"TextView bounds: %@",NSStringFromCGRect(cell.bodyTextView.bounds));
+    
+//    CGSize size = [cell.bodyTextView sizeThatFits:CGSizeMake(275, FLT_MAX)];
+////    NSLog(@"%@: %@", cell.userNameLabel.text, NSStringFromCGSize(size));
+//    [cell.bodyTextView setFrame:CGRectMake(0, 0, size.width, size.height)];
+    
+    //    cell.bodyLabel.preferredMaxLayoutWidth = tableView.bounds.size.width - (kBodyHorizontalInsetLeft + kInsetRight);
     
     [cell setNeedsUpdateConstraints];
     [cell updateConstraintsIfNeeded];
@@ -157,8 +181,13 @@ static NSString *CellIdentifier = @"PostCell";
     [cell.contentView layoutIfNeeded];
     
     CGFloat height = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+//    NSLog(@"bodyText: %@",NSStringFromCGSize([cell.bodyTextView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize]));
+//    NSLog(@"contentView height: %f", height);
     
+//    NSLog(@"bodyContentHeight: %f", height);
+
     return height;
+    return 250.0f;
 }
 
 
@@ -167,6 +196,27 @@ static NSString *CellIdentifier = @"PostCell";
     return 200.0f;
 }
 
+
+//- (CGFloat)textViewHeightForAttributedText: (NSAttributedString*)text andWidth: (CGFloat)width {
+//    UITextView *calculationView = [[UITextView alloc] init];
+//    [calculationView setAttributedText:text];
+//    CGSize size = [calculationView sizeThatFits:CGSizeMake(width, FLT_MAX)];
+//    return size.height;
+//}
+//
+//- (CGFloat)textViewHeightForRowAtIndexPath: (NSIndexPath*)indexPath {
+//    UITextView *calculationView = [self.tableView objectForKey: indexPath];
+//    CGFloat textViewWidth = calculationView.frame.size.width;
+//    if (!calculationView.attributedText) {
+//        // This will be needed on load, when the text view is not inited yet
+//        
+//        calculationView = [[UITextView alloc] init];
+//        calculationView.attributedText = // get the text from your datasource add attributes and insert here
+//        CGFloat textViewWidth = 290.0; // Insert the width of your UITextViews or include calculations to set it accordingly
+//    }
+//    CGSize size = [calculationView sizeThatFits:CGSizeMake(textViewWidth, FLT_MAX)];
+//    return size.height;
+//}
 
 
 

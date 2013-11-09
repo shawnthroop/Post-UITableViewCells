@@ -33,6 +33,9 @@ typedef enum {
 @property (strong, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *bodyLabel;
 
+@property (strong, nonatomic) IBOutlet UITextView *bodyTextView;
+
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *bodyHeightConstraint;
 
 - (void)updateFonts;
 
