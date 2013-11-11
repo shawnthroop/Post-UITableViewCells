@@ -45,10 +45,10 @@
     NSMutableArray *result = [[NSMutableArray alloc] initWithCapacity:[fontFamilies count]];
 
     for ( NSString *familyName in fontFamilies ) {
-        NSAttributedString *usernameString = [[NSAttributedString alloc] initWithString:familyName attributes:nil]; // @{NSFontAttributeName:userFont}
+        NSString *userNameString = [NSString stringWithFormat:@"@%@", familyName];
         NSDictionary *dictionary = [[NSDictionary alloc] initWithObjectsAndKeys:[self randomFullName], @"name",
                                     [self randomLorumIpsum], @"body",
-                                    usernameString, @"user",
+                                    userNameString, @"user",
                                     nil];
         [result addObject:dictionary];
     }
@@ -80,7 +80,7 @@
 
 
 
-- (NSAttributedString *)randomFullName {
+- (NSString *)randomFullName {
     
     NSString *randomUser = @"Billy Joe Shmoe John Idiot Hailey Bridges Truck TowMator Cableguy Erik Martin Gandalf";
     
@@ -93,10 +93,9 @@
     r = abs(r);
     NSArray *randomUserArray = [randomUserNames objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(r, 2)]];
     
-    NSString *sSimple = [NSString stringWithFormat:@"%@!!!", [randomUserArray componentsJoinedByString:@" "]];
+    NSString *string = [NSString stringWithFormat:@"%@!!!", [randomUserArray componentsJoinedByString:@" "]];
     
-    NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:sSimple attributes:nil];
-    return attrString;
+    return string;
 }
 
 

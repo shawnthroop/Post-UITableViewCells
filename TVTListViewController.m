@@ -37,21 +37,16 @@ static NSString *CellIdentifier = @"PostCell";
         bodyWidth = 275;
         [self.tableView setSeparatorInset:UIEdgeInsetsZero];
         [self.tableView setSeparatorColor:[UIColor clearColor]];
-        [self.tableView setRowHeight:400.0f];
     }
     return self;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    dispatch_queue_t queue = dispatch_get_main_queue();
-    dispatch_async(queue, ^{
-        NSLog(@"starting to calculate heights");
-        [self calculateHeightsForAllCells];
-        NSLog(@"ended calculation of heights");
-        
-    });
+    [self calculateHeightsForAllCells];
 }
+
+
 
 - (void)viewDidLoad
 {
@@ -136,8 +131,8 @@ static NSString *CellIdentifier = @"PostCell";
     
     // Populate labels
     NSDictionary *dataSourceItem = [self.model.dataSource objectAtIndex:indexPath.row];
-    cell.fullNameLabel.attributedText =  [dataSourceItem valueForKey:@"name"];
-    cell.userNameLabel.attributedText =  [dataSourceItem valueForKey:@"user"];
+    cell.fullNameLabel.text =  [dataSourceItem valueForKey:@"name"];
+    cell.userNameLabel.text =  [dataSourceItem valueForKey:@"user"];
     
     // Populate set style and text of textview
     NSMutableAttributedString *bodyText = [[dataSourceItem valueForKey:@"body"] mutableCopy];
@@ -187,10 +182,10 @@ static NSString *CellIdentifier = @"PostCell";
 
 #pragma mark - Cell height convenience methods
 
-- (TVTCell *)configureCellAtRow:(NSInteger)row
+
+- (CGFloat)heightForRowAtIndexPath:(NSInteger)row
 {
     TVTCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-//    TVTCell *tempCell = [[TVTCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     
     [cell updateFonts];
     NSDictionary *dataSourceItem = [self.model.dataSource objectAtIndex:row];
@@ -202,13 +197,8 @@ static NSString *CellIdentifier = @"PostCell";
     
     // Populate text for height calculation
     cell.bodyTextView.attributedText = bodyText;
-    cell.fullNameLabel.attributedText =  [dataSourceItem valueForKey:@"name"];
-    return cell;
-}
-
-- (CGFloat)heightForRowAtIndexPath:(NSInteger)row
-{
-    TVTCell *cell = [self configureCellAtRow:row];
+    cell.fullNameLabel.text =  [dataSourceItem valueForKey:@"name"];
+    
     CGSize size = [cell.bodyTextView sizeThatFits:CGSizeMake(275, FLT_MAX)];
     [cell.bodyHeightConstraint setConstant:size.height];
     
@@ -217,6 +207,8 @@ static NSString *CellIdentifier = @"PostCell";
     
     CGFloat height = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
     return height;
+    
+    
 }
 
 
@@ -235,6 +227,32 @@ static NSString *CellIdentifier = @"PostCell";
     }
     self.cellHeights = [NSArray arrayWithArray:tempHeights];
 }
+
+
+//- (void)calculateCellHeight
+//{
+//    TVTCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+//    
+//    [cell updateFonts];
+//    NSAttributedString
+//    
+//    // Prep attributed body text
+//    NSMutableAttributedString *bodyText = [[dataSourceItem valueForKey:@"body"] mutableCopy];
+//    bodyFontAttributes = [UIFont fontWithName:@"HelveticaNeue-Light" size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize];
+//    [bodyText addAttribute:NSFontAttributeName value:bodyFontAttributes range:NSMakeRange(0, bodyText.length)];
+//    
+//    // Populate text for height calculation
+//    cell.bodyTextView.attributedText = bodyText;
+//    cell.fullNameLabel.attributedText =  [dataSourceItem valueForKey:@"name"];
+//    
+//    CGSize size = [cell.bodyTextView sizeThatFits:CGSizeMake(275, FLT_MAX)];
+//    [cell.bodyHeightConstraint setConstant:size.height];
+//    
+//    [cell.contentView setNeedsLayout];
+//    [cell.contentView layoutIfNeeded];
+//    
+//    CGFloat height = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+//}
 
 
 
