@@ -10,20 +10,19 @@
 #import "TVTCell.h"
 #import "RJModel.h"
 
-#import "TVTHeightCalculator.h"
-
-
 static NSString *CellIdentifier = @"PostCell";
 
 @interface TVTListViewController ()
 @property (strong, nonatomic) RJModel *model;
 @property (strong, nonatomic) NSArray *cellHeights;
+@property CGFloat bodyWidth;
 @end
 
 @implementation TVTListViewController
 {
     UIFont *bodyFontAttributes;
 }
+@synthesize bodyWidth;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -35,6 +34,7 @@ static NSString *CellIdentifier = @"PostCell";
         [self.model populateDataSource];
         
         self.title = @"Table View Test Controller";
+        bodyWidth = 275;
         [self.tableView setSeparatorInset:UIEdgeInsetsZero];
         [self.tableView setSeparatorColor:[UIColor clearColor]];
         [self.tableView setRowHeight:400.0f];
@@ -42,12 +42,22 @@ static NSString *CellIdentifier = @"PostCell";
     return self;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    dispatch_queue_t queue = dispatch_get_main_queue();
+    dispatch_async(queue, ^{
+        NSLog(@"starting to calculate heights");
+        [self calculateHeightsForAllCells];
+        NSLog(@"ended calculation of heights");
+        
+    });
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
     [[self tableView] registerClass:[TVTCell class] forCellReuseIdentifier:CellIdentifier];
-    //    [self calculateHeightsForAllCells];
 }
 
 
@@ -61,15 +71,6 @@ static NSString *CellIdentifier = @"PostCell";
                                              selector:@selector(contentSizeCategoryChanged:)
                                                  name:UIContentSizeCategoryDidChangeNotification
                                                object:nil];
-    
-//    NSArray *_visibleCells = [self.tableView visibleCells];
-//    NSIndexPath *ip = [self.tableView indexPathForCell:[_visibleCells objectAtIndex:0]];
-//    [[TVTHeightCalculator sharedStore] heightForIndexPath:ip];
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^void(void){
-        [self calculateHeightsForAllCells];
-        NSLog(@"\nfinished calculating cell heights\n");
-    }];
-
 }
 
 
@@ -90,11 +91,16 @@ static NSString *CellIdentifier = @"PostCell";
 
 
 
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
+
+
 
 #pragma mark - Table view data source
 
@@ -103,12 +109,18 @@ static NSString *CellIdentifier = @"PostCell";
     return 1;
 }
 
+
+
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return self.model.dataSource.count;
 
 //    return 1;
 }
+
+
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -117,6 +129,7 @@ static NSString *CellIdentifier = @"PostCell";
     
     [cell updateFonts];
     bodyFontAttributes = [UIFont fontWithName:@"HelveticaNeue-Light" size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize];
+    UIColor *color = fullNameColor;
     
     // Change Profile Image
     [cell.profileImg setImage:[UIImage imageNamed:@"profileImg-default.png"]];
@@ -130,26 +143,18 @@ static NSString *CellIdentifier = @"PostCell";
     NSMutableAttributedString *bodyText = [[dataSourceItem valueForKey:@"body"] mutableCopy];
     NSRange bodyStringLength = NSMakeRange(0, bodyText.length);
     [bodyText addAttribute:NSFontAttributeName value:bodyFontAttributes range:bodyStringLength];
+    [bodyText addAttribute:NSForegroundColorAttributeName value:color range:bodyStringLength];
     cell.bodyTextView.attributedText = bodyText;
     
-//    NSLog(@"\n ---- cell.contentView | frame: %@ bounds: %@ \n\n\n\n", NSStringFromCGRect(cell.contentView.frame), NSStringFromCGSize(cell.contentView.bounds.size));
-    
-    [cell.bodyTextView setNeedsLayout];
-    [cell.bodyTextView layoutIfNeeded];
-    [cell.bodyTextView setNeedsUpdateConstraints];
-    [cell.bodyTextView updateConstraintsIfNeeded];
-
-    CGSize size = [cell.bodyTextView sizeThatFits:CGSizeMake(cell.bodyTextView.bounds.size.width, FLT_MAX)];
+    // Set body cell height so layout will
+    CGSize size = [cell.bodyTextView sizeThatFits:CGSizeMake(275, FLT_MAX)];
     [cell.bodyHeightConstraint setConstant:size.height];
-    NSLog(@"Cell bodyText |00| frame: %@, bounds: %@", NSStringFromCGRect(cell.bodyTextView.frame), NSStringFromCGSize(cell.bodyTextView.contentSize));
-    NSLog(@"Cell contentView |00| frame: %@, bounds: %@", NSStringFromCGRect(cell.contentView.frame), NSStringFromCGSize(cell.contentView.bounds.size));
+    
     [cell.contentView setNeedsLayout];
     [cell.contentView layoutIfNeeded];
     [cell.contentView setNeedsUpdateConstraints];
     [cell.contentView updateConstraintsIfNeeded];
-    NSLog(@"Cell bodyText |01| frame: %@, bounds: %@", NSStringFromCGRect(cell.bodyTextView.frame), NSStringFromCGSize(cell.bodyTextView.contentSize));
-    NSLog(@"Cell contentView |00| frame: %@, bounds: %@", NSStringFromCGRect(cell.contentView.frame), NSStringFromCGSize(cell.contentView.bounds.size));
-
+    
     return cell;
 }
 
@@ -163,12 +168,6 @@ static NSString *CellIdentifier = @"PostCell";
         height = [self heightForRowAtIndexPath:indexPath.row];
     }
     return height;
-    
-//    CGFloat preCalcHeight = [[self.cellHeights objectAtIndex:indexPath.row] floatValue];
-//    CGFloat nowCalcHeight = [self heightForRowAtIndexPath:indexPath.row];
-//    
-//    NSLog(@"pre: %f | now: %f", preCalcHeight, nowCalcHeight);
-//    return nowCalcHeight;
 }
 
 
@@ -183,35 +182,6 @@ static NSString *CellIdentifier = @"PostCell";
 }
 
 
-
-#pragma mark - Tap Gesture
-
-- (void)tap:(UIGestureRecognizer *)gr
-{
-//    NSLog(@"Tap: %d", gr.view.tag);
-    CGPoint p = [gr locationInView:gr.view];
-//    NSLog(@"%f, %f", p.x, p.y);
-    
-    UILabel *tappedLabel = (UILabel *)gr.view;
-    
-    UITextView *mappingTextView = [[UITextView alloc] initWithFrame:tappedLabel.frame];
-    mappingTextView.attributedText = tappedLabel.attributedText;
-    mappingTextView.font = tappedLabel.font;
-    mappingTextView.textContainerInset = UIEdgeInsetsMake(0, -8, 0, -8);
-    
-    NSLog(@"label.width:%f textView.width %f", tappedLabel.frame.size.width, mappingTextView.frame.size.width);
-    UITextPosition *tapPosition = [mappingTextView closestPositionToPoint:p];
-    if (tapPosition == nil) {
-        NSLog(@"Tap Position fail");
-        return;
-    }
-    
-    UITextPosition *textPosition = tapPosition;
-    
-    UITextRange *rangeOfCharacter = [mappingTextView.tokenizer rangeEnclosingPosition:textPosition withGranularity:UITextGranularityCharacter inDirection:UITextWritingDirectionNatural];
-    NSString *oneCharacter = [mappingTextView textInRange:rangeOfCharacter];
-    NSLog(@"Character: %@, Position: %@", oneCharacter, rangeOfCharacter);
-}
 
 
 
@@ -239,23 +209,6 @@ static NSString *CellIdentifier = @"PostCell";
 - (CGFloat)heightForRowAtIndexPath:(NSInteger)row
 {
     TVTCell *cell = [self configureCellAtRow:row];
-//    TVTCell *tempCell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-////    TVTCell *tempCell = [[TVTCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-//    
-//    [tempCell updateFonts];
-//    NSDictionary *dataSourceItem = [self.model.dataSource objectAtIndex:ip.row];
-//    
-//    // Prep attributed body text
-//    NSMutableAttributedString *bodyText = [[dataSourceItem valueForKey:@"body"] mutableCopy];
-//    bodyFontAttributes = [UIFont fontWithName:@"HelveticaNeue-Light" size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize];
-//    [bodyText addAttribute:NSFontAttributeName value:bodyFontAttributes range:NSMakeRange(0, bodyText.length)];
-//    
-//    // Populate text for height calculation
-//    tempCell.bodyTextView.attributedText = bodyText;
-//    tempCell.fullNameLabel.attributedText =  [dataSourceItem valueForKey:@"name"];
-    
-    //    NSLog(@"---- (Custom) heightForRowAtIndexPath: --00-- cell.bodyTextView | frame: %@ bounds: %@ contentSize: %@\n\n", NSStringFromCGRect(cell.bodyTextView.frame), NSStringFromCGSize(cell.bodyTextView.bounds.size), NSStringFromCGSize(cell.bodyTextView.contentSize));
-    
     CGSize size = [cell.bodyTextView sizeThatFits:CGSizeMake(275, FLT_MAX)];
     [cell.bodyHeightConstraint setConstant:size.height];
     
@@ -263,30 +216,12 @@ static NSString *CellIdentifier = @"PostCell";
     [cell.contentView layoutIfNeeded];
     
     CGFloat height = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
-    //    NSLog(@"contentView size: %@ (height: %f)",NSStringFromCGSize([cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize]), height);
-    //    [cell.cellHeightConstraint setConstant:height];
-    NSLog(@"contentView calculated height: %f", height);
     return height;
 }
 
 
 
 
-
-
-//- (void)calculateHeightsForCells {
-//    NSMutableArray *sections = [[NSMutableArray alloc] init];
-//    
-//    for (NSInteger section = 0; section <= [self.tableView numberOfSections]; section++) {
-//        NSMutableArray *tempSection = [[NSMutableArray alloc] init];
-//        for (NSInteger row = 0; row <= [self.tableView numberOfRowsInSection:section]; row++) {
-//            // Calc height
-//            CGFloat *cellHeight =
-//            tempSection addObject:[]
-//        }
-//        
-//    }
-//
 
 #pragma mark - Precalculating cell heights
 
@@ -302,55 +237,38 @@ static NSString *CellIdentifier = @"PostCell";
 }
 
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
 
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
+#pragma mark - Interaction
 
-/*
-#pragma mark - Navigation
-
-// In a story board-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+- (void)tap:(UIGestureRecognizer *)gr
 {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    //    NSLog(@"Tap: %d", gr.view.tag);
+    CGPoint p = [gr locationInView:gr.view];
+    //    NSLog(@"%f, %f", p.x, p.y);
+    
+    UILabel *tappedLabel = (UILabel *)gr.view;
+    
+    UITextView *mappingTextView = [[UITextView alloc] initWithFrame:tappedLabel.frame];
+    mappingTextView.attributedText = tappedLabel.attributedText;
+    mappingTextView.font = tappedLabel.font;
+    mappingTextView.textContainerInset = UIEdgeInsetsMake(0, -8, 0, -8);
+    
+    NSLog(@"label.width:%f textView.width %f", tappedLabel.frame.size.width, mappingTextView.frame.size.width);
+    UITextPosition *tapPosition = [mappingTextView closestPositionToPoint:p];
+    if (tapPosition == nil) {
+        NSLog(@"Tap Position fail");
+        return;
+    }
+    
+    UITextPosition *textPosition = tapPosition;
+    
+    UITextRange *rangeOfCharacter = [mappingTextView.tokenizer rangeEnclosingPosition:textPosition withGranularity:UITextGranularityCharacter inDirection:UITextWritingDirectionNatural];
+    NSString *oneCharacter = [mappingTextView textInRange:rangeOfCharacter];
+    NSLog(@"Character: %@, Position: %@", oneCharacter, rangeOfCharacter);
 }
 
- */
+
 
 @end

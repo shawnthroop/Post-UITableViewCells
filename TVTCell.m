@@ -8,9 +8,7 @@
 
 #import "TVTCell.h"
 
-#define fullNameColor [UIColor colorWithRed:47.0/255.0 green:47.0/255.0 blue:47.0/255.0 alpha:1.0]
-#define userNameColor [UIColor colorWithRed:137.0/255.0 green:137.0/255.0 blue:137.0/255.0 alpha:1.0]
-#define bodyColor [UIColor colorWithRed:126.0/255.0 green:126.0/255.0 blue:126.0/255.0 alpha:1.0]
+
 
 @interface TVTCell ()
 
@@ -183,17 +181,14 @@
     self.fullNameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light"
                                               size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize + kFullNamePointSizeOffset];
     self.bodyTextView.font = [UIFont fontWithName:@"HelveticaNeue-Light"
-                                             size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize];
+                                             size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize + kBodyTextPointSizeOffset];
     self.userNameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light"
-                                          size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize - kUserNamePointSizeOffset];
+                                          size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize + kUserNamePointSizeOffset];
 }
 
 - (void)prepareForReuse
 {
     [super prepareForReuse];
-    
-//    [self.contentView setNeedsLayout];
-//    [self.contentView layoutIfNeeded];
     
     self.imageView.image = nil;
     self.contentView.frame = CGRectMake(0,0, self.frame.size.width,kDefaultCellHeight);
