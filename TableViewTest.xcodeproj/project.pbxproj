@@ -23,6 +23,7 @@
 		B588969617F0D0880080426B /* TVTCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B588969517F0D0880080426B /* TVTCell.m */; };
 		B5952A9D182BF8080088E98A /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B5952A9C182BF8080088E98A /* README.md */; };
 		B5952AA0182D55D00088E98A /* RJModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B5952A9F182D55D00088E98A /* RJModel.m */; };
+		B5BBBA5A182F0A6A005DAA39 /* TVTHeightCalculator.m in Sources */ = {isa = PBXBuildFile; fileRef = B5BBBA59182F0A6A005DAA39 /* TVTHeightCalculator.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,8 @@
 		B5952A9C182BF8080088E98A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		B5952A9E182D55D00088E98A /* RJModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RJModel.h; sourceTree = "<group>"; };
 		B5952A9F182D55D00088E98A /* RJModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RJModel.m; sourceTree = "<group>"; };
+		B5BBBA58182F0A6A005DAA39 /* TVTHeightCalculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TVTHeightCalculator.h; sourceTree = "<group>"; };
+		B5BBBA59182F0A6A005DAA39 /* TVTHeightCalculator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TVTHeightCalculator.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +97,8 @@
 				B588969517F0D0880080426B /* TVTCell.m */,
 				B5952A9E182D55D00088E98A /* RJModel.h */,
 				B5952A9F182D55D00088E98A /* RJModel.m */,
+				B5BBBA58182F0A6A005DAA39 /* TVTHeightCalculator.h */,
+				B5BBBA59182F0A6A005DAA39 /* TVTHeightCalculator.m */,
 				B588966817F0CDF50080426B /* TableViewTest */,
 				B588968117F0CDF50080426B /* TableViewTestTests */,
 				B588966117F0CDF50080426B /* Frameworks */,
@@ -272,6 +277,7 @@
 				B588969317F0CE3B0080426B /* TVTListViewController.m in Sources */,
 				B588969617F0D0880080426B /* TVTCell.m in Sources */,
 				B588967317F0CDF50080426B /* TVTAppDelegate.m in Sources */,
+				B5BBBA5A182F0A6A005DAA39 /* TVTHeightCalculator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

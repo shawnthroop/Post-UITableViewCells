@@ -11,6 +11,10 @@
 
 
 #define kTapped 11
+#define kFullNamePointSizeOffset 6
+#define kUserNamePointSizeOffset 3
+
+#define kDefaultCellHeight 345.0f
 
 @interface TVTCell : UITableViewCell
 
@@ -21,6 +25,7 @@
 @property (strong, nonatomic) IBOutlet UITextView *bodyTextView;
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *bodyHeightConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *cellHeightConstraint;
 
 - (void)updateFonts;
 
