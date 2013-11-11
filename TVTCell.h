@@ -9,17 +9,7 @@
 
 #import <UIKit/UIKit.h>
 
-
-#define kTapped 11
-#define kFullNamePointSizeOffset 6
-#define kUserNamePointSizeOffset -3
-#define kBodyTextPointSizeOffset 1
-
-#define kDefaultCellHeight 345.0f
-
-#define fullNameColor [UIColor colorWithRed:47.0/255.0 green:47.0/255.0 blue:47.0/255.0 alpha:1.0]
-#define userNameColor [UIColor colorWithRed:137.0/255.0 green:137.0/255.0 blue:137.0/255.0 alpha:1.0]
-#define bodyColor [UIColor colorWithRed:126.0/255.0 green:126.0/255.0 blue:126.0/255.0 alpha:1.0]
+#import "Constants.h"
 
 @interface TVTCell : UITableViewCell
 
@@ -30,7 +20,8 @@
 @property (strong, nonatomic) IBOutlet UITextView *bodyTextView;
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *bodyHeightConstraint;
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *cellHeightConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *profileHeightConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *profileWidthConstraint;
 
 - (void)updateFonts;
 

@@ -36,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B53CAECD18313CDB00E26768 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		B588965F17F0CDF50080426B /* TableViewTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TableViewTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B588966217F0CDF50080426B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B588966417F0CDF50080426B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -94,6 +95,7 @@
 				B588969517F0D0880080426B /* TVTCell.m */,
 				B5952A9E182D55D00088E98A /* RJModel.h */,
 				B5952A9F182D55D00088E98A /* RJModel.m */,
+				B53CAECD18313CDB00E26768 /* Constants.h */,
 				B588966817F0CDF50080426B /* TableViewTest */,
 				B588968117F0CDF50080426B /* TableViewTestTests */,
 				B588966117F0CDF50080426B /* Frameworks */,

@@ -13,12 +13,13 @@
 @interface TVTCell ()
 
 @property (nonatomic, assign) BOOL didSetupConstraints;
+@property CGFloat pHeight;
 
 @end
 
 
 @implementation TVTCell
-@synthesize bodyHeightConstraint,cellHeightConstraint;
+@synthesize bodyHeightConstraint, profileHeightConstraint, profileWidthConstraint, pHeight;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -54,7 +55,7 @@
         self.bodyTextView.translatesAutoresizingMaskIntoConstraints = NO;
         [self.bodyTextView setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
         self.bodyTextView.autoresizingMask = UIViewAutoresizingFlexibleHeight & UIViewAutoresizingFlexibleWidth;
-        self.bodyTextView.textContainerInset = UIEdgeInsetsMake(-2, -4, 0, -4); // (t, l, b, r)
+        self.bodyTextView.textContainerInset = bodyTextEdgeInsets // UIEdgeInsetsMake(-2, -4, 0, -4); // (t, l, b, r)
         self.bodyTextView.editable = NO;
         self.bodyTextView.scrollEnabled = NO;
         self.bodyTextView.userInteractionEnabled = NO;
@@ -83,7 +84,7 @@
         self.contentView.frame = CGRectMake(0,0, self.frame.size.width,kDefaultCellHeight);
         
         [self updateFonts];
-        float pHeight = self.fullNameLabel.font.capHeight;
+        pHeight = self.fullNameLabel.font.capHeight;
        
         
         NSDictionary *viewsDictionary = @{@"profileImg" : self.profileImg,
@@ -129,24 +130,29 @@
                                          multiplier:1.0f
                                          constant:1.0f]];
         
-        [self.contentView addConstraint:[NSLayoutConstraint
-                                         constraintWithItem:self.profileImg
-                                         attribute:NSLayoutAttributeWidth
-                                         relatedBy:NSLayoutRelationEqual
-                                         toItem:nil
-                                         attribute:NSLayoutAttributeNotAnAttribute
-                                         multiplier:1.0f
-                                         constant:pHeight]];
         
-        [self.contentView addConstraint:[NSLayoutConstraint
+        
+        profileHeightConstraint = [NSLayoutConstraint
                                          constraintWithItem:self.profileImg
                                          attribute:NSLayoutAttributeHeight
                                          relatedBy:NSLayoutRelationEqual
                                          toItem:nil
                                          attribute:NSLayoutAttributeNotAnAttribute
                                          multiplier:1.0f
-                                         constant:pHeight]];
+                                         constant:pHeight];
+        [self.contentView addConstraint:profileHeightConstraint];
         
+        profileWidthConstraint = [NSLayoutConstraint
+                                   constraintWithItem:self.profileImg
+                                   attribute:NSLayoutAttributeWidth
+                                   relatedBy:NSLayoutRelationEqual
+                                   toItem:nil
+                                   attribute:NSLayoutAttributeNotAnAttribute
+                                   multiplier:1.0f
+                                   constant:pHeight];
+        [self.contentView addConstraint:profileWidthConstraint];
+        
+        // Body text
         bodyHeightConstraint = [NSLayoutConstraint constraintWithItem:self.bodyTextView
                                                             attribute:NSLayoutAttributeHeight
                                                             relatedBy:NSLayoutRelationEqual
@@ -184,6 +190,7 @@
                                              size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize + kBodyTextPointSizeOffset];
     self.userNameLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light"
                                           size:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize + kUserNamePointSizeOffset];
+    pHeight = self.fullNameLabel.font.lineHeight;
 }
 
 - (void)prepareForReuse
@@ -191,6 +198,8 @@
     [super prepareForReuse];
     
     self.imageView.image = nil;
+    self.imageView.frame = CGRectMake(0, 0, 40, 40);
+//    pHeight = self.fullNameLabel.font.capHeight;
     self.contentView.frame = CGRectMake(0,0, self.frame.size.width,kDefaultCellHeight);
 
     [self.bodyHeightConstraint setConstant:(kDefaultCellHeight - 71.0f)];
